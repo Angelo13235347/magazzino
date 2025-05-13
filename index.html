@@ -1927,93 +1927,93 @@
             document.getElementById('ordine-totale').value = totale.toFixed(2);
         }
         
-        // Funzione per salvare un ordine
-        function saveOrdine(e) {
-            e.preventDefault();
-            
-            const fornitore = document.getElementById('ordine-fornitore').value.trim();
-            const data = document.getElementById('ordine-data').value;
-            const note = document.getElementById('ordine-note').value.trim();
-            
-            // Validazione
-            if(!fornitore || !data) {
-                showAlert('alert-ordine', 'Per favore compila tutti i campi obbligatori', 'danger');
-                return;
-            }
-            
-            // Raccogli i prodotti dell'ordine
-            const ordineProdotti = [];
-            let hasErrors = false;
-            
-            document.querySelectorAll('.ordine-prodotto').forEach(prodottoDiv => {
-                const prodottoId = prodottoDiv.querySelector('.ordine-prodotto-nome').value;
-                const quantita = parseFloat(prodottoDiv.querySelector('.ordine-prodotto-quantita').value);
-                
-                if(!prodottoId || isNaN(quantita) {
-                    hasErrors = true;
-                    return;
-                }
-                
-                const prodotto = prodotti.find(p => p.id === parseInt(prodottoId));
-                if(prodotto) {
-                    ordineProdotti.push({
-                        prodottoId: prodotto.id,
-                        quantita,
-                        prezzo: prodotto.prezzo
-                    });
-                }
-            });
-            
-            if(hasErrors || ordineProdotti.length === 0) {
-                showAlert('alert-ordine', 'Per favore compila tutti i prodotti correttamente', 'danger');
-                return;
-            }
-            
-            // Calcola il totale
-            const totale = ordineProdotti.reduce((sum, p) => sum + (p.quantita * p.prezzo), 0);
-            
-            // Aggiungi o modifica l'ordine
-            const idInput = document.getElementById('ordine-id');
-            if(idInput && idInput.value) {
-                // Modifica ordine esistente
-                const index = ordini.findIndex(o => o.id === parseInt(idInput.value));
-                if(index !== -1) {
-                    ordini[index] = {
-                        ...ordini[index],
-                        fornitore,
-                        data,
-                        prodotti: ordineProdotti,
-                        totale,
-                        note
-                    };
-                    
-                    showAlert('alert-ordine', 'Ordine modificato con successo!', 'success');
-                }
-            } else {
-                // Aggiungi nuovo ordine
-                const newId = ordini.length > 0 ? Math.max(...ordini.map(o => o.id)) + 1 : 1;
-                ordini.push({
-                    id: newId,
-                    fornitore,
-                    data,
-                    prodotti: ordineProdotti,
-                    totale,
-                    stato: 'in attesa',
-                    note
-                });
-                
-                showAlert('alert-ordine', 'Ordine creato con successo!', 'success');
-            }
-            
-            saveData();
-            updateUI();
-            
-            // Resetta il form dopo 1 secondo
-            setTimeout(() => {
-                document.getElementById('form-ordine').reset();
-                hideModalOrdine();
-            }, 1000);
+// Funzione per salvare un ordine
+function saveOrdine(e) {
+    e.preventDefault();
+    
+    const fornitore = document.getElementById('ordine-fornitore').value.trim();
+    const data = document.getElementById('ordine-data').value;
+    const note = document.getElementById('ordine-note').value.trim();
+    
+    // Validazione
+    if(!fornitore || !data) {
+        showAlert('alert-ordine', 'Per favore compila tutti i campi obbligatori', 'danger');
+        return;
+    }
+    
+    // Raccogli i prodotti dell'ordine
+    const ordineProdotti = [];
+    let hasErrors = false;
+    
+    document.querySelectorAll('.ordine-prodotto').forEach(prodottoDiv => {
+        const prodottoId = prodottoDiv.querySelector('.ordine-prodotto-nome').value;
+        const quantita = parseFloat(prodottoDiv.querySelector('.ordine-prodotto-quantita').value);
+        
+        if(!prodottoId || isNaN(quantita)) {  // <-- Qui c'era l'errore (parentesi extra)
+            hasErrors = true;
+            return;
         }
+        
+        const prodotto = prodotti.find(p => p.id === parseInt(prodottoId));
+        if(prodotto) {
+            ordineProdotti.push({
+                prodottoId: prodotto.id,
+                quantita,
+                prezzo: prodotto.prezzo
+            });
+        }
+    });
+    
+    if(hasErrors || ordineProdotti.length === 0) {
+        showAlert('alert-ordine', 'Per favore compila tutti i prodotti correttamente', 'danger');
+        return;
+    }
+    
+    // Calcola il totale
+    const totale = ordineProdotti.reduce((sum, p) => sum + (p.quantita * p.prezzo), 0);
+    
+    // Aggiungi o modifica l'ordine
+    const idInput = document.getElementById('ordine-id');
+    if(idInput && idInput.value) {
+        // Modifica ordine esistente
+        const index = ordini.findIndex(o => o.id === parseInt(idInput.value));
+        if(index !== -1) {
+            ordini[index] = {
+                ...ordini[index],
+                fornitore,
+                data,
+                prodotti: ordineProdotti,
+                totale,
+                note
+            };
+            
+            showAlert('alert-ordine', 'Ordine modificato con successo!', 'success');
+        }
+    } else {
+        // Aggiungi nuovo ordine
+        const newId = ordini.length > 0 ? Math.max(...ordini.map(o => o.id)) + 1 : 1;
+        ordini.push({
+            id: newId,
+            fornitore,
+            data,
+            prodotti: ordineProdotti,
+            totale,
+            stato: 'in attesa',
+            note
+        });
+        
+        showAlert('alert-ordine', 'Ordine creato con successo!', 'success');
+    }
+    
+    saveData();
+    updateUI();
+    
+    // Resetta il form dopo 1 secondo
+    setTimeout(() => {
+        document.getElementById('form-ordine').reset();
+        hideModalOrdine();
+    }, 1000);
+}
         
         // Funzione per mostrare il modale dettaglio ordine
         function showDettaglioOrdineModal(id) {
