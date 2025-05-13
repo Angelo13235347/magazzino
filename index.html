@@ -3,16 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestione Magazzino Pizzeria</title>
+    <title>Gestione Magazzino Pizzeria PRO</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --primary-color: #e74c3c;
+            --primary-dark: #c0392b;
             --secondary-color: #f39c12;
+            --secondary-dark: #d68910;
             --dark-color: #2c3e50;
+            --dark-light: #34495e;
             --light-color: #ecf0f1;
+            --light-dark: #bdc3c7;
             --success-color: #27ae60;
+            --success-dark: #219653;
             --warning-color: #f1c40f;
+            --warning-dark: #d4ac0d;
             --danger-color: #e74c3c;
+            --info-color: #3498db;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
         }
         
         * {
@@ -26,42 +36,64 @@
             background-color: #f5f5f5;
             color: var(--dark-color);
             line-height: 1.6;
+            min-height: 100vh;
         }
         
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
+            padding-bottom: 60px;
         }
         
         header {
-            background-color: var(--primary-color);
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
             color: white;
             padding: 20px 0;
             text-align: center;
             border-radius: 5px;
             margin-bottom: 30px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow);
+            position: relative;
         }
         
         h1 {
             font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .header-actions {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
         }
         
         .tabs {
             display: flex;
             margin-bottom: 20px;
             border-bottom: 1px solid #ddd;
+            flex-wrap: wrap;
         }
         
         .tab {
-            padding: 10px 20px;
+            padding: 12px 24px;
             cursor: pointer;
             background-color: #f1f1f1;
             border: 1px solid #ddd;
             border-bottom: none;
             border-radius: 5px 5px 0 0;
             margin-right: 5px;
+            font-weight: 500;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .tab:hover {
+            background-color: #e1e1e1;
         }
         
         .tab.active {
@@ -72,12 +104,22 @@
             color: var(--primary-color);
         }
         
+        .tab i {
+            font-size: 1.1rem;
+        }
+        
         .tab-content {
             display: none;
-            padding: 20px;
+            padding: 25px;
             background-color: white;
             border-radius: 0 5px 5px 5px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         .tab-content.active {
@@ -88,6 +130,7 @@
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
+            font-size: 0.95rem;
         }
         
         th, td {
@@ -99,6 +142,8 @@
         th {
             background-color: var(--primary-color);
             color: white;
+            position: sticky;
+            top: 0;
         }
         
         tr:nth-child(even) {
@@ -115,7 +160,19 @@
             border-radius: 4px;
             cursor: pointer;
             font-size: 14px;
-            transition: background-color 0.3s;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .btn i {
+            font-size: 0.9rem;
+        }
+        
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 0.85rem;
         }
         
         .btn-primary {
@@ -124,7 +181,7 @@
         }
         
         .btn-primary:hover {
-            background-color: #c0392b;
+            background-color: var(--primary-dark);
         }
         
         .btn-success {
@@ -133,7 +190,7 @@
         }
         
         .btn-success:hover {
-            background-color: #219653;
+            background-color: var(--success-dark);
         }
         
         .btn-warning {
@@ -142,7 +199,7 @@
         }
         
         .btn-warning:hover {
-            background-color: #d4ac0d;
+            background-color: var(--warning-dark);
         }
         
         .btn-danger {
@@ -151,46 +208,82 @@
         }
         
         .btn-danger:hover {
-            background-color: #c0392b;
+            background-color: var(--primary-dark);
+        }
+        
+        .btn-info {
+            background-color: var(--info-color);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background-color: var(--light-dark);
+            color: var(--dark-color);
+        }
+        
+        .btn-secondary:hover {
+            background-color: #a6acaf;
         }
         
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 18px;
         }
         
         label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 6px;
             font-weight: bold;
+            color: var(--dark-light);
         }
         
-        input, select {
+        input, select, textarea {
             width: 100%;
-            padding: 10px;
+            padding: 10px 12px;
             border: 1px solid #ddd;
             border-radius: 4px;
+            font-size: 0.95rem;
+            transition: var(--transition);
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.2);
         }
         
         .modal {
             display: none;
             position: fixed;
-            z-index: 1;
+            z-index: 1000;
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
             overflow: auto;
-            background-color: rgba(0, 0, 0, 0.4);
+            background-color: rgba(0, 0, 0, 0.5);
+            animation: fadeInModal 0.3s;
+        }
+        
+        @keyframes fadeInModal {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
         
         .modal-content {
             background-color: #fefefe;
-            margin: 10% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 600px;
-            border-radius: 5px;
+            margin: 5% auto;
+            padding: 25px;
+            border: none;
+            width: 90%;
+            max-width: 700px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            animation: slideIn 0.3s;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
         
         .close {
@@ -199,16 +292,24 @@
             font-size: 28px;
             font-weight: bold;
             cursor: pointer;
+            transition: var(--transition);
         }
         
         .close:hover {
-            color: black;
+            color: var(--dark-color);
         }
         
         .alert {
             padding: 15px;
             margin-bottom: 20px;
             border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .alert i {
+            font-size: 1.2rem;
         }
         
         .alert-success {
@@ -223,9 +324,15 @@
             border: 1px solid #f5c6cb;
         }
         
+        .alert-warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+        }
+        
         .badge {
             display: inline-block;
-            padding: 3px 7px;
+            padding: 4px 8px;
             font-size: 12px;
             font-weight: bold;
             line-height: 1;
@@ -249,8 +356,14 @@
             background-color: var(--danger-color);
         }
         
+        .badge-info {
+            background-color: var(--info-color);
+        }
+        
         .search-container {
             margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
         }
         
         .search-container input {
@@ -259,6 +372,13 @@
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
         }
         
         .stats-container {
@@ -276,17 +396,154 @@
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             text-align: center;
+            transition: var(--transition);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
         
         .stat-card h3 {
             color: var(--primary-color);
             margin-bottom: 10px;
+            font-size: 1rem;
         }
         
         .stat-card p {
             font-size: 24px;
             font-weight: bold;
             color: var(--dark-color);
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .card-title {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .card-title i {
+            font-size: 1.1rem;
+        }
+        
+        .ordine-prodotto {
+            margin-bottom: 15px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .progress-container {
+            margin-top: 30px;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border-radius: 5px;
+            transition: width 0.5s ease;
+        }
+        
+        .progress-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--dark-light);
+        }
+        
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: var(--dark-color);
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+        
+        .footer-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 120px;
+            background-color: var(--dark-color);
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.8rem;
+        }
+        
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+        
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .tab-content.active, .tab-content.active * {
+                visibility: visible;
+            }
+            .tab-content.active {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                padding: 20px;
+                box-shadow: none;
+                border: none;
+            }
+            .action-buttons, .search-container, .tabs, header, .footer {
+                display: none !important;
+            }
+            table {
+                width: 100% !important;
+                font-size: 12px !important;
+            }
+            th, td {
+                padding: 8px 10px !important;
+            }
         }
         
         @media (max-width: 768px) {
@@ -298,6 +555,7 @@
                 border-radius: 0;
                 margin-right: 0;
                 margin-bottom: 5px;
+                justify-content: center;
             }
             
             .tab.active {
@@ -307,123 +565,245 @@
             .stats-container {
                 flex-direction: column;
             }
+            
+            .search-container {
+                flex-direction: column;
+            }
+            
+            .search-container input {
+                width: 100%;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .modal-content {
+                width: 95%;
+                margin: 10% auto;
+            }
+            
+            .header-actions {
+                position: static;
+                justify-content: center;
+                margin-top: 15px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Gestione Magazzino Pizzeria</h1>
+            <h1><i class="fas fa-pizza-slice"></i> Gestione Magazzino Pizzeria PRO</h1>
+            <p>Sistema completo per la gestione delle scorte e degli ordini</p>
+            
+            <div class="header-actions">
+                <button class="btn btn-success btn-sm" id="btn-backup"><i class="fas fa-save"></i> Backup</button>
+                <button class="btn btn-info btn-sm" id="btn-export"><i class="fas fa-file-export"></i> Esporta</button>
+            </div>
         </header>
         
         <div class="tabs">
-            <div class="tab active" data-tab="inventario">Inventario</div>
-            <div class="tab" data-tab="ordini">Ordini</div>
-            <div class="tab" data-tab="scadenze">Scadenze</div>
-            <div class="tab" data-tab="statistiche">Statistiche</div>
+            <div class="tab active" data-tab="inventario">
+                <i class="fas fa-boxes"></i> Inventario
+            </div>
+            <div class="tab" data-tab="ordini">
+                <i class="fas fa-truck"></i> Ordini
+            </div>
+            <div class="tab" data-tab="scadenze">
+                <i class="fas fa-calendar-times"></i> Scadenze
+            </div>
+            <div class="tab" data-tab="statistiche">
+                <i class="fas fa-chart-bar"></i> Statistiche
+            </div>
         </div>
         
         <!-- Tab Inventario -->
         <div id="inventario" class="tab-content active">
-            <div class="search-container">
-                <input type="text" id="search-inventario" placeholder="Cerca prodotto...">
+            <div class="action-buttons">
+                <div class="search-container">
+                    <input type="text" id="search-inventario" placeholder="Cerca prodotto...">
+                    <button class="btn btn-secondary" id="btn-reset-search"><i class="fas fa-times"></i> Reset</button>
+                </div>
+                
+                <div>
+                    <button class="btn btn-primary" id="btn-aggiungi-prodotto">
+                        <i class="fas fa-plus"></i> Aggiungi Prodotto
+                    </button>
+                    <button class="btn btn-info" id="btn-print-inventario">
+                        <i class="fas fa-print"></i> Stampa
+                    </button>
+                </div>
             </div>
             
-            <button class="btn btn-primary" id="btn-aggiungi-prodotto">Aggiungi Prodotto</button>
-            
-            <table id="table-inventario">
-                <thead>
-                    <tr>
-                        <th>Nome</th>
-                        <th>Categoria</th>
-                        <th>Quantità</th>
-                        <th>Unita</th>
-                        <th>Scorta Minima</th>
-                        <th>Stato</th>
-                        <th>Azioni</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- I dati verranno inseriti dinamicamente via JavaScript -->
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table id="table-inventario">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Categoria</th>
+                            <th>Quantità</th>
+                            <th>Unita</th>
+                            <th>Scorta Minima</th>
+                            <th>Stato</th>
+                            <th>Azioni</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- I dati verranno inseriti dinamicamente via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
         </div>
         
         <!-- Tab Ordini -->
         <div id="ordini" class="tab-content">
-            <div class="search-container">
-                <input type="text" id="search-ordini" placeholder="Cerca ordine...">
+            <div class="action-buttons">
+                <div class="search-container">
+                    <input type="text" id="search-ordini" placeholder="Cerca ordine...">
+                    <button class="btn btn-secondary" id="btn-reset-search-ordini"><i class="fas fa-times"></i> Reset</button>
+                </div>
+                
+                <div>
+                    <button class="btn btn-primary" id="btn-nuovo-ordine">
+                        <i class="fas fa-plus"></i> Nuovo Ordine
+                    </button>
+                    <button class="btn btn-info" id="btn-print-ordini">
+                        <i class="fas fa-print"></i> Stampa
+                    </button>
+                </div>
             </div>
             
-            <button class="btn btn-primary" id="btn-nuovo-ordine">Nuovo Ordine</button>
-            
-            <table id="table-ordini">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Fornitore</th>
-                        <th>Data</th>
-                        <th>Prodotti</th>
-                        <th>Totale</th>
-                        <th>Stato</th>
-                        <th>Azioni</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- I dati verranno inseriti dinamicamente via JavaScript -->
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table id="table-ordini">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Fornitore</th>
+                            <th>Data</th>
+                            <th>Prodotti</th>
+                            <th>Totale</th>
+                            <th>Stato</th>
+                            <th>Azioni</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- I dati verranno inseriti dinamicamente via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
         </div>
         
         <!-- Tab Scadenze -->
         <div id="scadenze" class="tab-content">
-            <div class="search-container">
-                <input type="text" id="search-scadenze" placeholder="Cerca prodotto in scadenza...">
+            <div class="action-buttons">
+                <div class="search-container">
+                    <input type="text" id="search-scadenze" placeholder="Cerca prodotto in scadenza...">
+                    <button class="btn btn-secondary" id="btn-reset-search-scadenze"><i class="fas fa-times"></i> Reset</button>
+                </div>
+                
+                <div>
+                    <button class="btn btn-primary" id="btn-aggiungi-scadenza">
+                        <i class="fas fa-plus"></i> Aggiungi Scadenza
+                    </button>
+                    <button class="btn btn-info" id="btn-print-scadenze">
+                        <i class="fas fa-print"></i> Stampa
+                    </button>
+                </div>
             </div>
             
-            <table id="table-scadenze">
-                <thead>
-                    <tr>
-                        <th>Prodotto</th>
-                        <th>Lotto</th>
-                        <th>Quantità</th>
-                        <th>Data Scadenza</th>
-                        <th>Giorni alla scadenza</th>
-                        <th>Azioni</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- I dati verranno inseriti dinamicamente via JavaScript -->
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table id="table-scadenze">
+                    <thead>
+                        <tr>
+                            <th>Prodotto</th>
+                            <th>Lotto</th>
+                            <th>Quantità</th>
+                            <th>Data Scadenza</th>
+                            <th>Giorni alla scadenza</th>
+                            <th>Azioni</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- I dati verranno inseriti dinamicamente via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
         </div>
         
         <!-- Tab Statistiche -->
         <div id="statistiche" class="tab-content">
+            <div class="action-buttons">
+                <button class="btn btn-info" id="btn-print-stats">
+                    <i class="fas fa-print"></i> Stampa Report
+                </button>
+            </div>
+            
             <div class="stats-container">
                 <div class="stat-card">
-                    <h3>Prodotti in magazzino</h3>
+                    <h3><i class="fas fa-box-open"></i> Prodotti in magazzino</h3>
                     <p id="stat-prodotti-totali">0</p>
                 </div>
                 <div class="stat-card">
-                    <h3>Prodotti in esaurimento</h3>
+                    <h3><i class="fas fa-exclamation-triangle"></i> Prodotti in esaurimento</h3>
                     <p id="stat-prodotti-esaurimento">0</p>
                 </div>
                 <div class="stat-card">
-                    <h3>Prodotti in scadenza</h3>
+                    <h3><i class="fas fa-calendar-times"></i> Prodotti in scadenza</h3>
                     <p id="stat-prodotti-scadenza">0</p>
                 </div>
                 <div class="stat-card">
-                    <h3>Spesa mensile</h3>
+                    <h3><i class="fas fa-euro-sign"></i> Spesa mensile</h3>
                     <p id="stat-spesa-mensile">€0.00</p>
                 </div>
             </div>
             
-            <h2>Andamento scorte</h2>
-            <canvas id="chart-scorte" width="400" height="200"></canvas>
+            <div class="card">
+                <div class="card-title">
+                    <i class="fas fa-chart-line"></i> Andamento scorte
+                </div>
+                <canvas id="chart-scorte" width="400" height="200"></canvas>
+                
+                <div class="progress-container">
+                    <div class="progress-labels">
+                        <span>Scorte basse</span>
+                        <span>Scorte ottimali</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress" id="progress-scorte" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
             
-            <h2 style="margin-top: 30px;">Prodotti più utilizzati</h2>
-            <canvas id="chart-prodotti" width="400" height="200"></canvas>
+            <div class="card">
+                <div class="card-title">
+                    <i class="fas fa-star"></i> Prodotti più utilizzati
+                </div>
+                <canvas id="chart-prodotti" width="400" height="200"></canvas>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">
+                    <i class="fas fa-history"></i> Ultimi ordini
+                </div>
+                <canvas id="chart-ordini" width="400" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer con stato e azioni -->
+    <div class="footer">
+        <div id="last-backup">
+            <i class="fas fa-info-circle"></i> Ultimo backup: <span id="last-backup-time">Mai</span>
+        </div>
+        
+        <div class="footer-actions">
+            <button class="btn btn-success btn-sm" id="btn-save-all">
+                <i class="fas fa-save"></i> Salva tutto
+            </button>
+            <button class="btn btn-danger btn-sm" id="btn-reset-all">
+                <i class="fas fa-trash-alt"></i> Reset dati
+            </button>
         </div>
     </div>
     
@@ -431,7 +811,7 @@
     <div id="modal-prodotto" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
-            <h2 id="modal-prodotto-titolo">Aggiungi Prodotto</h2>
+            <h2 id="modal-prodotto-titolo"><i class="fas fa-box"></i> Aggiungi Prodotto</h2>
             
             <div id="alert-prodotto" class="alert" style="display: none;"></div>
             
@@ -439,12 +819,12 @@
                 <input type="hidden" id="prodotto-id">
                 
                 <div class="form-group">
-                    <label for="prodotto-nome">Nome Prodotto</label>
+                    <label for="prodotto-nome"><i class="fas fa-tag"></i> Nome Prodotto</label>
                     <input type="text" id="prodotto-nome" required>
                 </div>
                 
                 <div class="form-group">
-                    <label for="prodotto-categoria">Categoria</label>
+                    <label for="prodotto-categoria"><i class="fas fa-list"></i> Categoria</label>
                     <select id="prodotto-categoria" required>
                         <option value="">Seleziona categoria</option>
                         <option value="Farine e basi">Farine e basi</option>
@@ -458,12 +838,12 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="prodotto-quantita">Quantità</label>
+                    <label for="prodotto-quantita"><i class="fas fa-balance-scale"></i> Quantità</label>
                     <input type="number" id="prodotto-quantita" step="0.01" required>
                 </div>
                 
                 <div class="form-group">
-                    <label for="prodotto-unita">Unità di misura</label>
+                    <label for="prodotto-unita"><i class="fas fa-ruler"></i> Unità di misura</label>
                     <select id="prodotto-unita" required>
                         <option value="kg">kg</option>
                         <option value="g">g</option>
@@ -474,21 +854,31 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="prodotto-scorta-min">Scorta minima</label>
+                    <label for="prodotto-scorta-min"><i class="fas fa-exclamation-circle"></i> Scorta minima</label>
                     <input type="number" id="prodotto-scorta-min" step="0.01" required>
                 </div>
                 
                 <div class="form-group">
-                    <label for="prodotto-prezzo">Prezzo unitario (€)</label>
+                    <label for="prodotto-prezzo"><i class="fas fa-euro-sign"></i> Prezzo unitario (€)</label>
                     <input type="number" id="prodotto-prezzo" step="0.01" required>
                 </div>
                 
                 <div class="form-group">
-                    <label for="prodotto-fornitore">Fornitore principale</label>
+                    <label for="prodotto-fornitore"><i class="fas fa-truck"></i> Fornitore principale</label>
                     <input type="text" id="prodotto-fornitore">
                 </div>
                 
-                <button type="submit" class="btn btn-primary">Salva</button>
+                <div class="form-group">
+                    <label for="prodotto-note"><i class="fas fa-sticky-note"></i> Note</label>
+                    <textarea id="prodotto-note" rows="2"></textarea>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Salva
+                </button>
+                <button type="button" class="btn btn-secondary" id="btn-cancel-prodotto">
+                    <i class="fas fa-times"></i> Annulla
+                </button>
             </form>
         </div>
     </div>
@@ -497,27 +887,27 @@
     <div id="modal-ordine" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
-            <h2>Nuovo Ordine</h2>
+            <h2><i class="fas fa-truck"></i> Nuovo Ordine</h2>
             
             <div id="alert-ordine" class="alert" style="display: none;"></div>
             
             <form id="form-ordine">
                 <div class="form-group">
-                    <label for="ordine-fornitore">Fornitore</label>
+                    <label for="ordine-fornitore"><i class="fas fa-building"></i> Fornitore</label>
                     <input type="text" id="ordine-fornitore" required>
                 </div>
                 
                 <div class="form-group">
-                    <label for="ordine-data">Data ordine</label>
+                    <label for="ordine-data"><i class="fas fa-calendar-alt"></i> Data ordine</label>
                     <input type="date" id="ordine-data" required>
                 </div>
                 
                 <div class="form-group">
-                    <label for="ordine-note">Note</label>
+                    <label for="ordine-note"><i class="fas fa-sticky-note"></i> Note</label>
                     <textarea id="ordine-note" rows="3" style="width: 100%;"></textarea>
                 </div>
                 
-                <h3>Prodotti</h3>
+                <h3><i class="fas fa-boxes"></i> Prodotti</h3>
                 <div id="ordine-prodotti-container">
                     <div class="ordine-prodotto">
                         <div style="display: flex; gap: 10px; margin-bottom: 10px;">
@@ -526,19 +916,26 @@
                                 <!-- I prodotti verranno inseriti dinamicamente -->
                             </select>
                             <input type="number" class="ordine-prodotto-quantita" step="0.01" placeholder="Q.tà" style="flex: 1;" required>
-                            <button type="button" class="btn btn-danger rimuovi-prodotto">-</button>
+                            <button type="button" class="btn btn-danger rimuovi-prodotto"><i class="fas fa-minus"></i></button>
                         </div>
                     </div>
                 </div>
                 
-                <button type="button" id="btn-aggiungi-prodotto-ordine" class="btn btn-secondary" style="margin-bottom: 20px;">+ Aggiungi prodotto</button>
+                <button type="button" id="btn-aggiungi-prodotto-ordine" class="btn btn-secondary" style="margin-bottom: 20px;">
+                    <i class="fas fa-plus"></i> Aggiungi prodotto
+                </button>
                 
                 <div class="form-group">
-                    <label for="ordine-totale">Totale ordine (€)</label>
+                    <label for="ordine-totale"><i class="fas fa-euro-sign"></i> Totale ordine (€)</label>
                     <input type="number" id="ordine-totale" step="0.01" readonly>
                 </div>
                 
-                <button type="submit" class="btn btn-primary">Conferma ordine</button>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-check"></i> Conferma ordine
+                </button>
+                <button type="button" class="btn btn-secondary" id="btn-cancel-ordine">
+                    <i class="fas fa-times"></i> Annulla
+                </button>
             </form>
         </div>
     </div>
@@ -547,35 +944,46 @@
     <div id="modal-dettaglio-ordine" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
-            <h2>Dettaglio Ordine</h2>
+            <h2><i class="fas fa-info-circle"></i> Dettaglio Ordine</h2>
             
             <div id="dettaglio-ordine-info">
-                <p><strong>Fornitore:</strong> <span id="dettaglio-ordine-fornitore"></span></p>
-                <p><strong>Data ordine:</strong> <span id="dettaglio-ordine-data"></span></p>
-                <p><strong>Stato:</strong> <span id="dettaglio-ordine-stato"></span></p>
-                <p><strong>Note:</strong> <span id="dettaglio-ordine-note"></span></p>
+                <p><strong><i class="fas fa-building"></i> Fornitore:</strong> <span id="dettaglio-ordine-fornitore"></span></p>
+                <p><strong><i class="fas fa-calendar-alt"></i> Data ordine:</strong> <span id="dettaglio-ordine-data"></span></p>
+                <p><strong><i class="fas fa-info-circle"></i> Stato:</strong> <span id="dettaglio-ordine-stato"></span></p>
+                <p><strong><i class="fas fa-sticky-note"></i> Note:</strong> <span id="dettaglio-ordine-note"></span></p>
             </div>
             
-            <h3>Prodotti ordinati</h3>
-            <table id="dettaglio-ordine-prodotti">
-                <thead>
-                    <tr>
-                        <th>Prodotto</th>
-                        <th>Quantità</th>
-                        <th>Prezzo unitario</th>
-                        <th>Totale</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- I dati verranno inseriti dinamicamente -->
-                </tbody>
-            </table>
+            <h3><i class="fas fa-boxes"></i> Prodotti ordinati</h3>
+            <div class="table-responsive">
+                <table id="dettaglio-ordine-prodotti">
+                    <thead>
+                        <tr>
+                            <th>Prodotto</th>
+                            <th>Quantità</th>
+                            <th>Prezzo unitario</th>
+                            <th>Totale</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- I dati verranno inseriti dinamicamente -->
+                    </tbody>
+                </table>
+            </div>
             
-            <p style="text-align: right; margin-top: 10px;"><strong>Totale ordine:</strong> €<span id="dettaglio-ordine-totale">0.00</span></p>
+            <p style="text-align: right; margin-top: 10px;">
+                <strong><i class="fas fa-euro-sign"></i> Totale ordine:</strong> €<span id="dettaglio-ordine-totale">0.00</span>
+            </p>
             
             <div id="dettaglio-ordine-azioni" style="margin-top: 20px;">
-                <button id="btn-ordine-ricevuto" class="btn btn-success">Segna come ricevuto</button>
-                <button id="btn-ordine-annulla" class="btn btn-danger">Annulla ordine</button>
+                <button id="btn-ordine-ricevuto" class="btn btn-success">
+                    <i class="fas fa-check"></i> Segna come ricevuto
+                </button>
+                <button id="btn-ordine-annulla" class="btn btn-danger">
+                    <i class="fas fa-ban"></i> Annulla ordine
+                </button>
+                <button id="btn-print-ordine" class="btn btn-info">
+                    <i class="fas fa-print"></i> Stampa
+                </button>
             </div>
         </div>
     </div>
@@ -584,7 +992,7 @@
     <div id="modal-scadenza" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
-            <h2>Aggiungi Scadenza</h2>
+            <h2><i class="fas fa-calendar-times"></i> Aggiungi Scadenza</h2>
             
             <div id="alert-scadenza" class="alert" style="display: none;"></div>
             
@@ -592,7 +1000,7 @@
                 <input type="hidden" id="scadenza-id">
                 
                 <div class="form-group">
-                    <label for="scadenza-prodotto">Prodotto</label>
+                    <label for="scadenza-prodotto"><i class="fas fa-box"></i> Prodotto</label>
                     <select id="scadenza-prodotto" required>
                         <option value="">Seleziona prodotto</option>
                         <!-- I prodotti verranno inseriti dinamicamente -->
@@ -600,954 +1008,537 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="scadenza-lotto">Numero lotto</label>
+                    <label for="scadenza-lotto"><i class="fas fa-barcode"></i> Numero lotto</label>
                     <input type="text" id="scadenza-lotto" required>
                 </div>
                 
                 <div class="form-group">
-                    <label for="scadenza-quantita">Quantità</label>
+                    <label for="scadenza-quantita"><i class="fas fa-balance-scale"></i> Quantità</label>
                     <input type="number" id="scadenza-quantita" step="0.01" required>
                 </div>
-                
-                <div class="form-group">
-                    <label for="scadenza-data">Data di scadenza</label>
+				                <div class="form-group">
+                    <label for="scadenza-data"><i class="fas fa-calendar-alt"></i> Data di scadenza</label>
                     <input type="date" id="scadenza-data" required>
                 </div>
                 
-                <button type="submit" class="btn btn-primary">Salva</button>
+                <div class="form-group">
+                    <label for="scadenza-note"><i class="fas fa-sticky-note"></i> Note</label>
+                    <textarea id="scadenza-note" rows="2"></textarea>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Salva
+                </button>
+                <button type="button" class="btn btn-secondary" id="btn-cancel-scadenza">
+                    <i class="fas fa-times"></i> Annulla
+                </button>
             </form>
         </div>
     </div>
     
+    <!-- Modale Conferma Azione -->
+    <div id="modal-conferma" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <span class="close">&times;</span>
+            <h2 id="modal-conferma-titolo"><i class="fas fa-question-circle"></i> Conferma</h2>
+            
+            <p id="modal-conferma-messaggio">Sei sicuro di voler procedere con questa azione?</p>
+            
+            <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+                <button id="btn-conferma-ok" class="btn btn-danger">Conferma</button>
+                <button id="btn-conferma-annulla" class="btn btn-secondary">Annulla</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modale Backup/Ripristino -->
+    <div id="modal-backup" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2><i class="fas fa-save"></i> Backup & Ripristino</h2>
+            
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i> Esegui regolarmente il backup dei tuoi dati per prevenire perdite.
+            </div>
+            
+            <div class="card" style="margin-bottom: 20px;">
+                <div class="card-title">
+                    <i class="fas fa-download"></i> Crea Backup
+                </div>
+                <p>Scarica un file contenente tutti i dati del sistema.</p>
+                <button id="btn-crea-backup" class="btn btn-primary">
+                    <i class="fas fa-file-export"></i> Crea e Scarica Backup
+                </button>
+            </div>
+            
+            <div class="card" style="margin-bottom: 20px;">
+                <div class="card-title">
+                    <i class="fas fa-upload"></i> Ripristina Backup
+                </div>
+                <p>Carica un file di backup precedentemente creato.</p>
+                <div class="form-group">
+                    <label for="file-backup"><i class="fas fa-file"></i> Seleziona file backup</label>
+                    <input type="file" id="file-backup" accept=".json">
+                </div>
+                <button id="btn-ripristina-backup" class="btn btn-warning">
+                    <i class="fas fa-file-import"></i> Ripristina Backup
+                </button>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">
+                    <i class="fas fa-history"></i> Cronologia Backup
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Dimensione</th>
+                            <th>Azioni</th>
+                        </tr>
+                    </thead>
+                    <tbody id="backup-history">
+                        <!-- I backup verranno inseriti dinamicamente -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modale Esporta Dati -->
+    <div id="modal-export" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2><i class="fas fa-file-export"></i> Esporta Dati</h2>
+            
+            <div class="form-group">
+                <label for="export-tipo"><i class="fas fa-filter"></i> Tipo di Esportazione</label>
+                <select id="export-tipo" class="form-control">
+                    <option value="inventario">Inventario Completo</option>
+                    <option value="ordini">Tutti gli Ordini</option>
+                    <option value="scadenze">Prodotti in Scadenza</option>
+                    <option value="stats">Statistiche</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="export-formato"><i class="fas fa-file"></i> Formato</label>
+                <select id="export-formato" class="form-control">
+                    <option value="csv">CSV (Excel)</option>
+                    <option value="json">JSON</option>
+                    <option value="pdf">PDF</option>
+                </select>
+            </div>
+            
+            <div class="form-group" id="export-range-group" style="display: none;">
+                <label for="export-range"><i class="fas fa-calendar-alt"></i> Intervallo Date</label>
+                <div style="display: flex; gap: 10px;">
+                    <input type="date" id="export-data-inizio" class="form-control">
+                    <span>a</span>
+                    <input type="date" id="export-data-fine" class="form-control">
+                </div>
+            </div>
+            
+            <button id="btn-esporta" class="btn btn-primary">
+                <i class="fas fa-download"></i> Esporta
+            </button>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // Dati di esempio (in un'applicazione reale, questi verrebbero dal server)
-        let prodotti = [
-            { id: 1, nome: "Farina 00", categoria: "Farine e basi", quantita: 25, unita: "kg", scorta_min: 10, prezzo: 0.85, fornitore: "Fornitore A" },
-            { id: 2, nome: "Mozzarella", categoria: "Formaggi", quantita: 15, unita: "kg", scorta_min: 8, prezzo: 8.50, fornitore: "Fornitore B" },
-            { id: 3, nome: "Pomodoro pelato", categoria: "Condimenti", quantita: 30, unita: "kg", scorta_min: 15, prezzo: 2.20, fornitore: "Fornitore C" },
-            { id: 4, nome: "Prosciutto crudo", categoria: "Salumi", quantita: 5, unita: "kg", scorta_min: 3, prezzo: 22.00, fornitore: "Fornitore D" },
-            { id: 5, nome: "Coca Cola", categoria: "Bevande", quantita: 120, unita: "pz", scorta_min: 50, prezzo: 1.20, fornitore: "Fornitore E" },
-            { id: 6, nome: "Olio extravergine", categoria: "Condimenti", quantita: 8, unita: "l", scorta_min: 5, prezzo: 12.00, fornitore: "Fornitore C" }
-        ];
-        
-        let ordini = [
-            { 
-                id: 1, 
-                fornitore: "Fornitore B", 
-                data: "2023-05-10", 
-                prodotti: [
-                    { prodottoId: 2, nome: "Mozzarella", quantita: 10, prezzo: 8.50 },
-                    { prodottoId: 4, nome: "Prosciutto crudo", quantita: 3, prezzo: 22.00 }
-                ], 
-                note: "Consegnare entro venerdì", 
-                stato: "ricevuto", 
-                totale: 136.00 
-            },
-            { 
-                id: 2, 
-                fornitore: "Fornitore C", 
-                data: "2023-05-15", 
-                prodotti: [
-                    { prodottoId: 3, nome: "Pomodoro pelato", quantita: 20, prezzo: 2.20 },
-                    { prodottoId: 6, nome: "Olio extravergine", quantita: 5, prezzo: 12.00 }
-                ], 
-                note: "", 
-                stato: "in attesa", 
-                totale: 94.00 
-            }
-        ];
-        
-        let scadenze = [
-            { 
-                id: 1, 
-                prodottoId: 2, 
-                prodottoNome: "Mozzarella", 
-                lotto: "LOT12345", 
-                quantita: 5, 
-                data_scadenza: "2023-06-15" 
-            },
-            { 
-                id: 2, 
-                prodottoId: 4, 
-                prodottoNome: "Prosciutto crudo", 
-                lotto: "LOT67890", 
-                quantita: 2, 
-                data_scadenza: "2023-05-25" 
-            },
-            { 
-                id: 3, 
-                prodottoId: 5, 
-                prodottoNome: "Coca Cola", 
-                lotto: "LOT54321", 
-                quantita: 30, 
-                data_scadenza: "2024-01-10" 
-            }
-        ];
-        
-        // Variabili globali
-        let currentTab = "inventario";
-        let currentProdottoId = null;
-        let currentOrdineId = null;
-        let currentScadenzaId = null;
-        
-        // Inizializzazione della pagina
+        // Qui andrà il codice JavaScript per la gestione dell'applicazione
         document.addEventListener('DOMContentLoaded', function() {
-            // Gestione tab
+            // Gestione dei tab
             const tabs = document.querySelectorAll('.tab');
             tabs.forEach(tab => {
-                tab.addEventListener('click', function() {
-                    tabs.forEach(t => t.classList.remove('active'));
-                    this.classList.add('active');
+                tab.addEventListener('click', () => {
+                    // Rimuovi la classe active da tutti i tab e contenuti
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
                     
-                    const tabId = this.getAttribute('data-tab');
-                    switchTab(tabId);
+                    // Aggiungi la classe active al tab e al contenuto selezionato
+                    tab.classList.add('active');
+                    const tabId = tab.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
                 });
             });
             
-            // Pulsanti modali
-            document.getElementById('btn-aggiungi-prodotto').addEventListener('click', function() {
-                openProdottoModal();
-            });
-            
-            document.getElementById('btn-nuovo-ordine').addEventListener('click', function() {
-                openOrdineModal();
-            });
-            
-            // Chiudi modali
-            const closeButtons = document.querySelectorAll('.close');
-            closeButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const modal = this.closest('.modal');
+            // Gestione modali
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                const span = modal.querySelector('.close');
+                
+                span.addEventListener('click', () => {
                     modal.style.display = 'none';
                 });
-            });
-            
-            // Chiudi modali cliccando fuori
-            window.addEventListener('click', function(event) {
-                if (event.target.classList.contains('modal')) {
-                    event.target.style.display = 'none';
-                }
-            });
-            
-            // Form prodotto
-            document.getElementById('form-prodotto').addEventListener('submit', function(e) {
-                e.preventDefault();
-                saveProdotto();
-            });
-            
-            // Form ordine
-            document.getElementById('form-ordine').addEventListener('submit', function(e) {
-                e.preventDefault();
-                saveOrdine();
-            });
-            
-            // Aggiungi prodotto all'ordine
-            document.getElementById('btn-aggiungi-prodotto-ordine').addEventListener('click', function() {
-                addProdottoToOrdine();
-            });
-            
-            // Form scadenza
-            document.getElementById('form-scadenza').addEventListener('submit', function(e) {
-                e.preventDefault();
-                saveScadenza();
-            });
-            
-            // Carica dati iniziali
-            loadInventario();
-            loadOrdini();
-            loadScadenze();
-            updateStats();
-            
-            // Inizializza grafici
-            initCharts();
-        });
-        
-        // Funzione per cambiare tab
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            
-            document.getElementById(tabId).classList.add('active');
-            currentTab = tabId;
-            
-            // Aggiorna i grafici quando si va nella tab Statistiche
-            if (tabId === 'statistiche') {
-                updateCharts();
-            }
-        }
-        
-        // Funzioni per l'inventario
-        function loadInventario() {
-            const tableBody = document.querySelector('#table-inventario tbody');
-            tableBody.innerHTML = '';
-            
-            prodotti.forEach(prodotto => {
-                const stato = getStatoProdotto(prodotto);
                 
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${prodotto.nome}</td>
-                    <td>${prodotto.categoria}</td>
-                    <td>${prodotto.quantita} ${prodotto.unita}</td>
-                    <td>${prodotto.unita}</td>
-                    <td>${prodotto.scorta_min} ${prodotto.unita}</td>
-                    <td>${stato}</td>
-                    <td>
-                        <button class="btn btn-warning btn-modifica-prodotto" data-id="${prodotto.id}">Modifica</button>
-                        <button class="btn btn-danger btn-elimina-prodotto" data-id="${prodotto.id}">Elimina</button>
-                        <button class="btn btn-success btn-aggiungi-scadenza" data-id="${prodotto.id}">Scadenza</button>
-                    </td>
-                `;
-                
-                tableBody.appendChild(row);
-            });
-            
-            // Aggiungi event listeners ai pulsanti
-            document.querySelectorAll('.btn-modifica-prodotto').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const id = parseInt(this.getAttribute('data-id'));
-                    openProdottoModal(id);
-                });
-            });
-            
-            document.querySelectorAll('.btn-elimina-prodotto').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const id = parseInt(this.getAttribute('data-id'));
-                    deleteProdotto(id);
-                });
-            });
-            
-            document.querySelectorAll('.btn-aggiungi-scadenza').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const id = parseInt(this.getAttribute('data-id'));
-                    openScadenzaModal(id);
-                });
-            });
-            
-            // Ricerca
-            document.getElementById('search-inventario').addEventListener('input', function() {
-                const searchTerm = this.value.toLowerCase();
-                const rows = tableBody.querySelectorAll('tr');
-                
-                rows.forEach(row => {
-                    const nome = row.cells[0].textContent.toLowerCase();
-                    const categoria = row.cells[1].textContent.toLowerCase();
-                    
-                    if (nome.includes(searchTerm) || categoria.includes(searchTerm)) {
-                        row.style.display = '';
-                    } else {
-                        row.style.display = 'none';
+                window.addEventListener('click', (event) => {
+                    if (event.target === modal) {
+                        modal.style.display = 'none';
                     }
                 });
             });
-        }
-        
-        function getStatoProdotto(prodotto) {
-            if (prodotto.quantita <= prodotto.scorta_min * 0.3) {
-                return '<span class="badge badge-danger">Esaurimento</span>';
-            } else if (prodotto.quantita <= prodotto.scorta_min) {
-                return '<span class="badge badge-warning">Bassa scorta</span>';
-            } else {
-                return '<span class="badge badge-success">Disponibile</span>';
-            }
-        }
-        
-        function openProdottoModal(id = null) {
-            const modal = document.getElementById('modal-prodotto');
-            const form = document.getElementById('form-prodotto');
-            const alertDiv = document.getElementById('alert-prodotto');
             
-            // Reset form e alert
-            form.reset();
-            alertDiv.style.display = 'none';
+            // Apri modale aggiungi prodotto
+            document.getElementById('btn-aggiungi-prodotto').addEventListener('click', () => {
+                document.getElementById('modal-prodotto-titolo').textContent = 'Aggiungi Prodotto';
+                document.getElementById('prodotto-id').value = '';
+                document.getElementById('form-prodotto').reset();
+                document.getElementById('alert-prodotto').style.display = 'none';
+                document.getElementById('modal-prodotto').style.display = 'block';
+            });
             
-            if (id) {
-                // Modifica prodotto esistente
-                currentProdottoId = id;
-                document.getElementById('modal-prodotto-titolo').textContent = 'Modifica Prodotto';
+            // Apri modale nuovo ordine
+            document.getElementById('btn-nuovo-ordine').addEventListener('click', () => {
+                document.getElementById('form-ordine').reset();
+                document.getElementById('alert-ordine').style.display = 'none';
+                document.getElementById('modal-ordine').style.display = 'block';
+            });
+            
+            // Apri modale aggiungi scadenza
+            document.getElementById('btn-aggiungi-scadenza').addEventListener('click', () => {
+                document.getElementById('form-scadenza').reset();
+                document.getElementById('alert-scadenza').style.display = 'none';
+                document.getElementById('modal-scadenza').style.display = 'block';
+            });
+            
+            // Apri modale backup
+            document.getElementById('btn-backup').addEventListener('click', () => {
+                document.getElementById('modal-backup').style.display = 'block';
+            });
+            
+            // Apri modale export
+            document.getElementById('btn-export').addEventListener('click', () => {
+                document.getElementById('modal-export').style.display = 'block';
+            });
+            
+            // Gestione pulsanti annulla
+            document.getElementById('btn-cancel-prodotto').addEventListener('click', () => {
+                document.getElementById('modal-prodotto').style.display = 'none';
+            });
+            
+            document.getElementById('btn-cancel-ordine').addEventListener('click', () => {
+                document.getElementById('modal-ordine').style.display = 'none';
+            });
+            
+            document.getElementById('btn-cancel-scadenza').addEventListener('click', () => {
+                document.getElementById('modal-scadenza').style.display = 'none';
+            });
+            
+            // Aggiungi prodotto all'ordine
+            document.getElementById('btn-aggiungi-prodotto-ordine').addEventListener('click', () => {
+                const container = document.getElementById('ordine-prodotti-container');
+                const newProduct = document.createElement('div');
+                newProduct.className = 'ordine-prodotto';
+                newProduct.innerHTML = `
+                    <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                        <select class="ordine-prodotto-nome" style="flex: 3;" required>
+                            <option value="">Seleziona prodotto</option>
+                            <!-- I prodotti verranno inseriti dinamicamente -->
+                        </select>
+                        <input type="number" class="ordine-prodotto-quantita" step="0.01" placeholder="Q.tà" style="flex: 1;" required>
+                        <button type="button" class="btn btn-danger rimuovi-prodotto"><i class="fas fa-minus"></i></button>
+                    </div>
+                `;
+                container.appendChild(newProduct);
                 
-                const prodotto = prodotti.find(p => p.id === id);
+                // Aggiungi listener per rimuovere prodotto
+                newProduct.querySelector('.rimuovi-prodotto').addEventListener('click', () => {
+                    container.removeChild(newProduct);
+                });
+            });
+            
+            // Inizializza grafici (dati verranno inseriti dinamicamente)
+            const ctxScorte = document.getElementById('chart-scorte').getContext('2d');
+            const chartScorte = new Chart(ctxScorte, {
+                type: 'line',
+                data: {
+                    labels: ['Gen', 'Feb', 'Mar', 'Apr', 'Mag', 'Giu', 'Lug', 'Ago', 'Set', 'Ott', 'Nov', 'Dic'],
+                    datasets: [{
+                        label: 'Valore scorte (€)',
+                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        borderColor: 'rgba(231, 76, 60, 1)',
+                        backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                        borderWidth: 2,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+            
+            const ctxProdotti = document.getElementById('chart-prodotti').getContext('2d');
+            const chartProdotti = new Chart(ctxProdotti, {
+                type: 'bar',
+                data: {
+                    labels: ['Prodotto 1', 'Prodotto 2', 'Prodotto 3', 'Prodotto 4', 'Prodotto 5'],
+                    datasets: [{
+                        label: 'Quantità utilizzate',
+                        data: [0, 0, 0, 0, 0],
+                        backgroundColor: [
+                            'rgba(231, 76, 60, 0.7)',
+                            'rgba(243, 156, 18, 0.7)',
+                            'rgba(46, 204, 113, 0.7)',
+                            'rgba(52, 152, 219, 0.7)',
+                            'rgba(155, 89, 182, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(231, 76, 60, 1)',
+                            'rgba(243, 156, 18, 1)',
+                            'rgba(46, 204, 113, 1)',
+                            'rgba(52, 152, 219, 1)',
+                            'rgba(155, 89, 182, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+            
+            const ctxOrdini = document.getElementById('chart-ordini').getContext('2d');
+            const chartOrdini = new Chart(ctxOrdini, {
+                type: 'bar',
+                data: {
+                    labels: ['Ultimo mese', 'Ultimi 3 mesi', 'Ultimi 6 mesi', 'Ultimo anno'],
+                    datasets: [{
+                        label: 'Numero ordini',
+                        data: [0, 0, 0, 0],
+                        backgroundColor: 'rgba(52, 152, 219, 0.7)',
+                        borderColor: 'rgba(52, 152, 219, 1)',
+                        borderWidth: 1
+                    }, {
+                        label: 'Valore ordini (€)',
+                        data: [0, 0, 0, 0],
+                        backgroundColor: 'rgba(46, 204, 113, 0.7)',
+                        borderColor: 'rgba(46, 204, 113, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+            
+            // Funzioni per la gestione dei dati
+            // (Qui andranno le funzioni per gestire inventario, ordini, scadenze, etc.)
+            
+            // Esempio dati iniziali (verranno sostituiti con dati reali o da localStorage)
+            const inventario = [
+                {
+                    id: 1,
+                    nome: 'Farina 00',
+                    categoria: 'Farine e basi',
+                    quantita: 25,
+                    unita: 'kg',
+                    scortaMin: 10,
+                    prezzo: 0.85,
+                    fornitore: 'Fornitore A',
+                    note: ''
+                },
+                {
+                    id: 2,
+                    nome: 'Mozzarella',
+                    categoria: 'Formaggi',
+                    quantita: 8,
+                    unita: 'kg',
+                    scortaMin: 5,
+                    prezzo: 6.50,
+                    fornitore: 'Fornitore B',
+                    note: 'Mozzarella di bufala'
+                }
+            ];
+            
+            // Carica i dati nell'interfaccia
+            function caricaInventario() {
+                const tbody = document.querySelector('#table-inventario tbody');
+                tbody.innerHTML = '';
+                
+                inventario.forEach(prodotto => {
+                    // Determina lo stato della scorta
+                    let stato, badgeClass;
+                    if (prodotto.quantita <= prodotto.scortaMin * 0.3) {
+                        stato = 'Esaurimento';
+                        badgeClass = 'badge-danger';
+                    } else if (prodotto.quantita <= prodotto.scortaMin) {
+                        stato = 'Bassa';
+                        badgeClass = 'badge-warning';
+                    } else {
+                        stato = 'Ottimale';
+                        badgeClass = 'badge-success';
+                    }
+                    
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${prodotto.nome}</td>
+                        <td>${prodotto.categoria}</td>
+                        <td>${prodotto.quantita}</td>
+                        <td>${prodotto.unita}</td>
+                        <td>${prodotto.scortaMin}</td>
+                        <td><span class="badge ${badgeClass}">${stato}</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-warning modifica-prodotto" data-id="${prodotto.id}">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger elimina-prodotto" data-id="${prodotto.id}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+                
+                // Aggiungi event listener ai pulsanti
+                document.querySelectorAll('.modifica-prodotto').forEach(btn => {
+                    btn.addEventListener('click', () => modificaProdotto(btn.getAttribute('data-id')));
+                });
+                
+                document.querySelectorAll('.elimina-prodotto').forEach(btn => {
+                    btn.addEventListener('click', () => confermaEliminaProdotto(btn.getAttribute('data-id')));
+                });
+            }
+            
+            function modificaProdotto(id) {
+                const prodotto = inventario.find(p => p.id == id);
                 if (prodotto) {
+                    document.getElementById('modal-prodotto-titolo').textContent = 'Modifica Prodotto';
                     document.getElementById('prodotto-id').value = prodotto.id;
                     document.getElementById('prodotto-nome').value = prodotto.nome;
                     document.getElementById('prodotto-categoria').value = prodotto.categoria;
                     document.getElementById('prodotto-quantita').value = prodotto.quantita;
                     document.getElementById('prodotto-unita').value = prodotto.unita;
-                    document.getElementById('prodotto-scorta-min').value = prodotto.scorta_min;
+                    document.getElementById('prodotto-scorta-min').value = prodotto.scortaMin;
                     document.getElementById('prodotto-prezzo').value = prodotto.prezzo;
-                    document.getElementById('prodotto-fornitore').value = prodotto.fornitore || '';
-                }
-            } else {
-                // Nuovo prodotto
-                currentProdottoId = null;
-                document.getElementById('modal-prodotto-titolo').textContent = 'Aggiungi Prodotto';
-            }
-            
-            modal.style.display = 'block';
-        }
-        
-        function saveProdotto() {
-            const form = document.getElementById('form-prodotto');
-            const alertDiv = document.getElementById('alert-prodotto');
-            
-            const prodottoData = {
-                nome: document.getElementById('prodotto-nome').value,
-                categoria: document.getElementById('prodotto-categoria').value,
-                quantita: parseFloat(document.getElementById('prodotto-quantita').value),
-                unita: document.getElementById('prodotto-unita').value,
-                scorta_min: parseFloat(document.getElementById('prodotto-scorta-min').value),
-                prezzo: parseFloat(document.getElementById('prodotto-prezzo').value),
-                fornitore: document.getElementById('prodotto-fornitore').value
-            };
-            
-            // Validazione
-            if (prodottoData.quantita < 0 || prodottoData.scorta_min < 0 || prodottoData.prezzo < 0) {
-                alertDiv.textContent = 'I valori non possono essere negativi!';
-                alertDiv.className = 'alert alert-danger';
-                alertDiv.style.display = 'block';
-                return;
-            }
-            
-            if (currentProdottoId) {
-                // Modifica prodotto esistente
-                const index = prodotti.findIndex(p => p.id === currentProdottoId);
-                if (index !== -1) {
-                    prodottoData.id = currentProdottoId;
-                    prodotti[index] = prodottoData;
+                    document.getElementById('prodotto-fornitore').value = prodotto.fornitore;
+                    document.getElementById('prodotto-note').value = prodotto.note;
                     
-                    alertDiv.textContent = 'Prodotto modificato con successo!';
-                    alertDiv.className = 'alert alert-success';
-                    alertDiv.style.display = 'block';
+                    document.getElementById('modal-prodotto').style.display = 'block';
                 }
-            } else {
-                // Aggiungi nuovo prodotto
-                const newId = prodotti.length > 0 ? Math.max(...prodotti.map(p => p.id)) + 1 : 1;
-                prodottoData.id = newId;
-                prodotti.push(prodottoData);
-                
-                alertDiv.textContent = 'Prodotto aggiunto con successo!';
-                alertDiv.className = 'alert alert-success';
-                alertDiv.style.display = 'block';
             }
             
-            // Ricarica la tabella e aggiorna le statistiche
-            setTimeout(() => {
-                loadInventario();
-                updateStats();
-                updateCharts();
-                form.reset();
-                document.getElementById('modal-prodotto').style.display = 'none';
-            }, 1500);
-        }
-        
-        function deleteProdotto(id) {
-            if (confirm('Sei sicuro di voler eliminare questo prodotto?')) {
-                prodotti = prodotti.filter(p => p.id !== id);
-                
-                // Rimuovi anche le scadenze associate
-                scadenze = scadenze.filter(s => s.prodottoId !== id);
-                
-                loadInventario();
-                loadScadenze();
-                updateStats();
-                updateCharts();
-            }
-        }
-        
-        // Funzioni per gli ordini
-        function loadOrdini() {
-            const tableBody = document.querySelector('#table-ordini tbody');
-            tableBody.innerHTML = '';
-            
-            ordini.forEach(ordine => {
-                const stato = getStatoOrdine(ordine.stato);
-                const dataFormattata = formatDate(ordine.data);
-                const numProdotti = ordine.prodotti.length;
-                
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${ordine.id}</td>
-                    <td>${ordine.fornitore}</td>
-                    <td>${dataFormattata}</td>
-                    <td>${numProdotti} prodotti</td>
-                    <td>€${ordine.totale.toFixed(2)}</td>
-                    <td>${stato}</td>
-                    <td>
-                        <button class="btn btn-primary btn-dettaglio-ordine" data-id="${ordine.id}">Dettaglio</button>
-                    </td>
-                               `;
-                
-                tableBody.appendChild(row);
-            });
-            
-            // Aggiungi event listeners ai pulsanti
-            document.querySelectorAll('.btn-dettaglio-ordine').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const id = parseInt(this.getAttribute('data-id'));
-                    openDettaglioOrdineModal(id);
-                });
-            });
-            
-            // Ricerca
-            document.getElementById('search-ordini').addEventListener('input', function() {
-                const searchTerm = this.value.toLowerCase();
-                const rows = tableBody.querySelectorAll('tr');
-                
-                rows.forEach(row => {
-                    const fornitore = row.cells[1].textContent.toLowerCase();
-                    const data = row.cells[2].textContent.toLowerCase();
-                    const stato = row.cells[5].textContent.toLowerCase();
-                    
-                    if (fornitore.includes(searchTerm) || data.includes(searchTerm) || stato.includes(searchTerm)) {
-                        row.style.display = '';
-                    } else {
-                        row.style.display = 'none';
-                    }
-                });
-            });
-        }
-        
-        function getStatoOrdine(stato) {
-            switch(stato) {
-                case 'in attesa':
-                    return '<span class="badge badge-warning">In attesa</span>';
-                case 'ricevuto':
-                    return '<span class="badge badge-success">Ricevuto</span>';
-                case 'annullato':
-                    return '<span class="badge badge-danger">Annullato</span>';
-                default:
-                    return stato;
-            }
-        }
-        
-        function formatDate(dateString) {
-            const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-            return new Date(dateString).toLocaleDateString('it-IT', options);
-        }
-        
-        function openOrdineModal() {
-            const modal = document.getElementById('modal-ordine');
-            const form = document.getElementById('form-ordine');
-            const alertDiv = document.getElementById('alert-ordine');
-            
-            // Reset form e alert
-            form.reset();
-            alertDiv.style.display = 'none';
-            
-            // Imposta la data di oggi come default
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('ordine-data').value = today;
-            
-            // Popola i select dei prodotti
-            const selectProdotti = document.querySelectorAll('.ordine-prodotto-nome');
-            selectProdotti.forEach(select => {
-                select.innerHTML = '<option value="">Seleziona prodotto</option>';
-                prodotti.forEach(prodotto => {
-                    const option = document.createElement('option');
-                    option.value = prodotto.id;
-                    option.textContent = `${prodotto.nome} (${prodotto.unita})`;
-                    option.setAttribute('data-prezzo', prodotto.prezzo);
-                    select.appendChild(option);
-                });
-            });
-            
-            // Resetta il container dei prodotti (mantenendo solo il primo)
-            const container = document.getElementById('ordine-prodotti-container');
-            while (container.children.length > 1) {
-                container.removeChild(container.lastChild);
-            }
-            
-            // Resetta il totale
-            document.getElementById('ordine-totale').value = '0.00';
-            
-            modal.style.display = 'block';
-        }
-        
-        function addProdottoToOrdine() {
-            const container = document.getElementById('ordine-prodotti-container');
-            const newProductDiv = document.createElement('div');
-            newProductDiv.className = 'ordine-prodotto';
-            
-            newProductDiv.innerHTML = `
-                <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-                    <select class="ordine-prodotto-nome" style="flex: 3;" required>
-                        <option value="">Seleziona prodotto</option>
-                        ${prodotti.map(p => 
-                            `<option value="${p.id}" data-prezzo="${p.prezzo}">${p.nome} (${p.unita})</option>`
-                        ).join('')}
-                    </select>
-                    <input type="number" class="ordine-prodotto-quantita" step="0.01" placeholder="Q.tà" style="flex: 1;" required>
-                    <button type="button" class="btn btn-danger rimuovi-prodotto">-</button>
-                </div>
-            `;
-            
-            container.appendChild(newProductDiv);
-            
-            // Aggiungi event listener per rimuovere il prodotto
-            newProductDiv.querySelector('.rimuovi-prodotto').addEventListener('click', function() {
-                container.removeChild(newProductDiv);
-                calculateOrdineTotale();
-            });
-            
-            // Aggiungi event listener per calcolare il totale quando cambia la quantità
-            const quantitaInput = newProductDiv.querySelector('.ordine-prodotto-quantita');
-            const prodottoSelect = newProductDiv.querySelector('.ordine-prodotto-nome');
-            
-            quantitaInput.addEventListener('input', calculateOrdineTotale);
-            prodottoSelect.addEventListener('change', calculateOrdineTotale);
-        }
-        
-        function calculateOrdineTotale() {
-            let totale = 0;
-            
-            document.querySelectorAll('.ordine-prodotto').forEach(prodDiv => {
-                const select = prodDiv.querySelector('.ordine-prodotto-nome');
-                const quantitaInput = prodDiv.querySelector('.ordine-prodotto-quantita');
-                
-                if (select.value && quantitaInput.value) {
-                    const prezzo = parseFloat(select.selectedOptions[0].getAttribute('data-prezzo'));
-                    const quantita = parseFloat(quantitaInput.value);
-                    
-                    if (!isNaN(prezzo) && !isNaN(quantita)) {
-                        totale += prezzo * quantita;
-                    }
-                }
-            });
-            
-            document.getElementById('ordine-totale').value = totale.toFixed(2);
-        }
-        
-        function saveOrdine() {
-            const form = document.getElementById('form-ordine');
-            const alertDiv = document.getElementById('alert-ordine');
-            
-            const fornitore = document.getElementById('ordine-fornitore').value;
-            const data = document.getElementById('ordine-data').value;
-            const note = document.getElementById('ordine-note').value;
-            const totale = parseFloat(document.getElementById('ordine-totale').value);
-            
-            // Raccogli i prodotti
-            const ordineProdotti = [];
-            let isValid = true;
-            
-            document.querySelectorAll('.ordine-prodotto').forEach(prodDiv => {
-                const select = prodDiv.querySelector('.ordine-prodotto-nome');
-                const quantitaInput = prodDiv.querySelector('.ordine-prodotto-quantita');
-                
-                if (!select.value || !quantitaInput.value || parseFloat(quantitaInput.value) <= 0) {
-                    isValid = false;
-                    return;
-                }
-                
-                const prodotto = prodotti.find(p => p.id === parseInt(select.value));
+            function confermaEliminaProdotto(id) {
+                const prodotto = inventario.find(p => p.id == id);
                 if (prodotto) {
-                    ordineProdotti.push({
-                        prodottoId: prodotto.id,
-                        nome: prodotto.nome,
-                        quantita: parseFloat(quantitaInput.value),
-                        prezzo: prodotto.prezzo
-                    });
-                }
-            });
-            
-            if (!isValid || ordineProdotti.length === 0) {
-                alertDiv.textContent = 'Inserisci almeno un prodotto valido!';
-                alertDiv.className = 'alert alert-danger';
-                alertDiv.style.display = 'block';
-                return;
-            }
-            
-            if (!fornitore || !data) {
-                alertDiv.textContent = 'Compila tutti i campi obbligatori!';
-                alertDiv.className = 'alert alert-danger';
-                alertDiv.style.display = 'block';
-                return;
-            }
-            
-            // Crea il nuovo ordine
-            const newId = ordini.length > 0 ? Math.max(...ordini.map(o => o.id)) + 1 : 1;
-            const newOrdine = {
-                id: newId,
-                fornitore,
-                data,
-                prodotti: ordineProdotti,
-                note,
-                stato: 'in attesa',
-                totale
-            };
-            
-            ordini.push(newOrdine);
-            
-            alertDiv.textContent = 'Ordine creato con successo!';
-            alertDiv.className = 'alert alert-success';
-            alertDiv.style.display = 'block';
-            
-            // Ricarica la tabella e chiudi il modale
-            setTimeout(() => {
-                loadOrdini();
-                form.reset();
-                document.getElementById('modal-ordine').style.display = 'none';
-            }, 1500);
-        }
-        
-        function openDettaglioOrdineModal(id) {
-            const modal = document.getElementById('modal-dettaglio-ordine');
-            const ordine = ordini.find(o => o.id === id);
-            
-            if (!ordine) return;
-            
-            currentOrdineId = id;
-            
-            // Popola le informazioni dell'ordine
-            document.getElementById('dettaglio-ordine-fornitore').textContent = ordine.fornitore;
-            document.getElementById('dettaglio-ordine-data').textContent = formatDate(ordine.data);
-            document.getElementById('dettaglio-ordine-stato').innerHTML = getStatoOrdine(ordine.stato);
-            document.getElementById('dettaglio-ordine-note').textContent = ordine.note || 'Nessuna nota';
-            document.getElementById('dettaglio-ordine-totale').textContent = ordine.totale.toFixed(2);
-            
-            // Popola la tabella dei prodotti
-            const tableBody = document.querySelector('#dettaglio-ordine-prodotti tbody');
-            tableBody.innerHTML = '';
-            
-            ordine.prodotti.forEach(prod => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${prod.nome}</td>
-                    <td>${prod.quantita}</td>
-                    <td>€${prod.prezzo.toFixed(2)}</td>
-                    <td>€${(prod.quantita * prod.prezzo).toFixed(2)}</td>
-                `;
-                tableBody.appendChild(row);
-            });
-            
-            // Mostra/nascondi pulsanti in base allo stato
-            const btnRicevuto = document.getElementById('btn-ordine-ricevuto');
-            const btnAnnulla = document.getElementById('btn-ordine-annulla');
-            
-            if (ordine.stato === 'in attesa') {
-                btnRicevuto.style.display = 'inline-block';
-                btnAnnulla.style.display = 'inline-block';
-            } else {
-                btnRicevuto.style.display = 'none';
-                btnAnnulla.style.display = 'none';
-            }
-            
-            // Aggiungi event listeners ai pulsanti
-            btnRicevuto.onclick = function() {
-                updateOrdineStatus(id, 'ricevuto');
-            };
-            
-            btnAnnulla.onclick = function() {
-                if (confirm('Sei sicuro di voler annullare questo ordine?')) {
-                    updateOrdineStatus(id, 'annullato');
-                }
-            };
-            
-            modal.style.display = 'block';
-        }
-        
-        function updateOrdineStatus(id, newStatus) {
-            const ordine = ordini.find(o => o.id === id);
-            if (ordine) {
-                ordine.stato = newStatus;
-                
-                // Se l'ordine è stato ricevuto, aggiorna le quantità in magazzino
-                if (newStatus === 'ricevuto') {
-                    ordine.prodotti.forEach(prod => {
-                        const prodotto = prodotti.find(p => p.id === prod.prodottoId);
-                        if (prodotto) {
-                            prodotto.quantita += prod.quantita;
-                        }
-                    });
+                    document.getElementById('modal-conferma-titolo').innerHTML = '<i class="fas fa-trash-alt"></i> Elimina Prodotto';
+                    document.getElementById('modal-conferma-messaggio').textContent = `Sei sicuro di voler eliminare il prodotto "${prodotto.nome}"?`;
                     
-                    loadInventario();
-                    updateStats();
-                    updateCharts();
-                }
-                
-                loadOrdini();
-                document.getElementById('modal-dettaglio-ordine').style.display = 'none';
-            }
-        }
-        
-        // Funzioni per le scadenze
-        function loadScadenze() {
-            const tableBody = document.querySelector('#table-scadenze tbody');
-            tableBody.innerHTML = '';
-            
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-            
-            scadenze.forEach(scadenza => {
-                const scadenzaDate = new Date(scadenza.data_scadenza);
-                const diffTime = scadenzaDate - today;
-                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                
-                let giorniText = diffDays;
-                let badgeClass = 'badge-success';
-                
-                if (diffDays < 0) {
-                    giorniText = `Scaduto ${Math.abs(diffDays)} giorni fa`;
-                    badgeClass = 'badge-danger';
-                } else if (diffDays === 0) {
-                    giorniText = 'Scade oggi';
-                    badgeClass = 'badge-danger';
-                } else if (diffDays <= 7) {
-                    giorniText = `${diffDays} giorni`;
-                    badgeClass = 'badge-warning';
-                } else {
-                    giorniText = `${diffDays} giorni`;
-                }
-                
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${scadenza.prodottoNome}</td>
-                    <td>${scadenza.lotto}</td>
-                    <td>${scadenza.quantita}</td>
-                    <td>${formatDate(scadenza.data_scadenza)}</td>
-                    <td><span class="badge ${badgeClass}">${giorniText}</span></td>
-                    <td>
-                        <button class="btn btn-danger btn-elimina-scadenza" data-id="${scadenza.id}">Elimina</button>
-                    </td>
-                `;
-                
-                tableBody.appendChild(row);
-            });
-            
-            // Aggiungi event listeners ai pulsanti
-            document.querySelectorAll('.btn-elimina-scadenza').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const id = parseInt(this.getAttribute('data-id'));
-                    deleteScadenza(id);
-                });
-            });
-            
-            // Ricerca
-            document.getElementById('search-scadenze').addEventListener('input', function() {
-                const searchTerm = this.value.toLowerCase();
-                const rows = tableBody.querySelectorAll('tr');
-                
-                rows.forEach(row => {
-                    const prodotto = row.cells[0].textContent.toLowerCase();
-                    const lotto = row.cells[1].textContent.toLowerCase();
-                    
-                    if (prodotto.includes(searchTerm) || lotto.includes(searchTerm)) {
-                        row.style.display = '';
-                    } else {
-                        row.style.display = 'none';
-                    }
-                });
-            });
-        }
-        
-        function openScadenzaModal(prodottoId = null) {
-            const modal = document.getElementById('modal-scadenza');
-            const form = document.getElementById('form-scadenza');
-            const alertDiv = document.getElementById('alert-scadenza');
-            
-            // Reset form e alert
-            form.reset();
-            alertDiv.style.display = 'none';
-            
-            // Popola il select dei prodotti
-            const selectProdotto = document.getElementById('scadenza-prodotto');
-            selectProdotto.innerHTML = '<option value="">Seleziona prodotto</option>';
-            
-            prodotti.forEach(prodotto => {
-                const option = document.createElement('option');
-                option.value = prodotto.id;
-                option.textContent = `${prodotto.nome} (${prodotto.unita})`;
-                selectProdotto.appendChild(option);
-            });
-            
-            if (prodottoId) {
-                // Imposta il prodotto selezionato
-                selectProdotto.value = prodottoId;
-                selectProdotto.disabled = true;
-            } else {
-                selectProdotto.disabled = false;
-            }
-            
-            // Imposta la data di default a 30 giorni da oggi
-            const defaultDate = new Date();
-            defaultDate.setDate(defaultDate.getDate() + 30);
-            document.getElementById('scadenza-data').valueAsDate = defaultDate;
-            
-            modal.style.display = 'block';
-        }
-        
-        function saveScadenza() {
-            const form = document.getElementById('form-scadenza');
-            const alertDiv = document.getElementById('alert-scadenza');
-            
-            const prodottoId = parseInt(document.getElementById('scadenza-prodotto').value);
-            const lotto = document.getElementById('scadenza-lotto').value;
-            const quantita = parseFloat(document.getElementById('scadenza-quantita').value);
-            const data = document.getElementById('scadenza-data').value;
-            
-            // Validazione
-            if (!prodottoId || !lotto || isNaN(quantita) || quantita <= 0 || !data) {
-                alertDiv.textContent = 'Compila tutti i campi con valori validi!';
-                alertDiv.className = 'alert alert-danger';
-                alertDiv.style.display = 'block';
-                return;
-            }
-            
-            const prodotto = prodotti.find(p => p.id === prodottoId);
-            if (!prodotto) {
-                alertDiv.textContent = 'Prodotto non trovato!';
-                alertDiv.className = 'alert alert-danger';
-                alertDiv.style.display = 'block';
-                return;
-            }
-            
-            if (currentScadenzaId) {
-                // Modifica scadenza esistente
-                const index = scadenze.findIndex(s => s.id === currentScadenzaId);
-                if (index !== -1) {
-                    scadenze[index] = {
-                        id: currentScadenzaId,
-                        prodottoId,
-                        prodottoNome: prodotto.nome,
-                        lotto,
-                        quantita,
-                        data_scadenza: data
+                    const btnConferma = document.getElementById('btn-conferma-ok');
+                    btnConferma.onclick = function() {
+                        eliminaProdotto(id);
+                        document.getElementById('modal-conferma').style.display = 'none';
                     };
                     
-                    alertDiv.textContent = 'Scadenza modificata con successo!';
-                    alertDiv.className = 'alert alert-success';
-                    alertDiv.style.display = 'block';
+                    document.getElementById('modal-conferma').style.display = 'block';
                 }
-            } else {
-                // Aggiungi nuova scadenza
-                const newId = scadenze.length > 0 ? Math.max(...scadenze.map(s => s.id)) + 1 : 1;
-                scadenze.push({
-                    id: newId,
-                    prodottoId,
-                    prodottoNome: prodotto.nome,
-                    lotto,
-                    quantita,
-                    data_scadenza: data
-                });
+            }
+            
+            function eliminaProdotto(id) {
+                const index = inventario.findIndex(p => p.id == id);
+                if (index !== -1) {
+                    inventario.splice(index, 1);
+                    caricaInventario();
+                    
+                    // Mostra messaggio di successo
+                    const alert = document.getElementById('alert-prodotto');
+                    alert.innerHTML = '<i class="fas fa-check-circle"></i> Prodotto eliminato con successo!';
+                    alert.className = 'alert alert-success';
+                    alert.style.display = 'flex';
+                    
+                    setTimeout(() => {
+                        alert.style.display = 'none';
+                    }, 3000);
+                }
+            }
+            
+            // Gestione form prodotto
+            document.getElementById('form-prodotto').addEventListener('submit', function(e) {
+                e.preventDefault();
                 
-                alertDiv.textContent = 'Scadenza aggiunta con successo!';
-                alertDiv.className = 'alert alert-success';
-                alertDiv.style.display = 'block';
-            }
-            
-            // Ricarica la tabella e aggiorna le statistiche
-            setTimeout(() => {
-                loadScadenze();
-                updateStats();
-                updateCharts();
-                form.reset();
-                document.getElementById('modal-scadenza').style.display = 'none';
-                currentScadenzaId = null;
-            }, 1500);
-        }
-        
-        function deleteScadenza(id) {
-            if (confirm('Sei sicuro di voler eliminare questa scadenza?')) {
-                scadenze = scadenze.filter(s => s.id !== id);
-                loadScadenze();
-                updateStats();
-                updateCharts();
-            }
-        }
-        
-        // Funzioni per le statistiche
-        function updateStats() {
-            // Prodotti totali
-            document.getElementById('stat-prodotti-totali').textContent = prodotti.length;
-            
-            // Prodotti in esaurimento
-            const prodottiEsaurimento = prodotti.filter(p => p.quantita <= p.scorta_min);
-            document.getElementById('stat-prodotti-esaurimento').textContent = prodottiEsaurimento.length;
-            
-            // Prodotti in scadenza
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-            const nextWeek = new Date();
-            nextWeek.setDate(today.getDate() + 7);
-            
-            const prodottiScadenza = scadenze.filter(s => {
-                const scadenzaDate = new Date(s.data_scadenza);
-                return scadenzaDate <= nextWeek;
+                const id = document.getElementById('prodotto-id').value;
+                const isNew = id === '';
+                
+                const prodotto = {
+                    id: isNew ? Date.now() : parseInt(id),
+                    nome: document.getElementById('prodotto-nome').value,
+                    categoria: document.getElementById('prodotto-categoria').value,
+                    quantita: parseFloat(document.getElementById('prodotto-quantita').value),
+                    unita: document.getElementById('prodotto-unita').value,
+                    scortaMin: parseFloat(document.getElementById('prodotto-scorta-min').value),
+                    prezzo: parseFloat(document.getElementById('prodotto-prezzo').value),
+                    fornitore: document.getElementById('prodotto-fornitore').value,
+                    note: document.getElementById('prodotto-note').value
+                };
+                
+                if (isNew) {
+                    inventario.push(prodotto);
+                } else {
+                    const index = inventario.findIndex(p => p.id == id);
+                    if (index !== -1) {
+                        inventario[index] = prodotto;
+                    }
+                }
+                
+                caricaInventario();
+                
+                // Mostra messaggio di successo
+                const alert = document.getElementById('alert-prodotto');
+                alert.innerHTML = `<i class="fas fa-check-circle"></i> Prodotto ${isNew ? 'aggiunto' : 'modificato'} con successo!`;
+                alert.className = 'alert alert-success';
+                alert.style.display = 'flex';
+                
+                setTimeout(() => {
+                    alert.style.display = 'none';
+                }, 3000);
+                
+                // Chiudi il modale dopo 1 secondo
+                setTimeout(() => {
+                    document.getElementById('modal-prodotto').style.display = 'none';
+                }, 1000);
             });
             
-            document.getElementById('stat-prodotti-scadenza').textContent = prodottiScadenza.length;
+            // Inizializza l'applicazione
+            caricaInventario();
             
-            // Spesa mensile
-            const currentMonth = new Date().getMonth();
-            const currentYear = new Date().getFullYear();
+            // Aggiorna statistiche
+            document.getElementById('stat-prodotti-totali').textContent = inventario.length;
+            document.getElementById('stat-prodotti-esaurimento').textContent = inventario.filter(p => p.quantita <= p.scortaMin).length;
             
-            const spesaMensile = ordini
-                .filter(o => {
-                    const ordineDate = new Date(o.data);
-                    return ordineDate.getMonth() === currentMonth && 
-                           ordineDate.getFullYear() === currentYear &&
-                           o.stato !== 'annullato';
-                })
-                .reduce((sum, o) => sum + o.totale, 0);
+            // Simula dati per i grafici
+            chartScorte.data.datasets[0].data = [1200, 1900, 1500, 2000, 1800, 2100, 2200, 2300, 2000, 1900, 2100, 2400];
+            chartScorte.update();
             
-            document.getElementById('stat-spesa-mensile').textContent = `€${spesaMensile.toFixed(2)}`;
-        }
-        
-        // Funzioni per i grafici
-        function initCharts() {
-            // Inizializza i canvas per i grafici
-            window.scorteChart = new Chart(
-                document.getElementById('chart-scorte').getContext('2d'),
-                { type: 'line', data: { labels: [], datasets: [] } }
-            );
+            chartProdotti.data.labels = ['Farina 00', 'Mozzarella', 'Pomodoro', 'Olio EVO', 'Lievito'];
+            chartProdotti.data.datasets[0].data = [120, 85, 60, 45, 30];
+            chartProdotti.update();
             
-            window.prodottiChart = new Chart(
-                document.getElementById('chart-prodotti').getContext('2d'),
-                { type: 'bar', data: { labels: [], datasets: [] } }
-            );
-        }
-        
-        function updateCharts() {
-            // Grafico andamento scorte
-            const categorie = [...new Set(prodotti.map(p => p.categoria))];
-            const scortePerCategoria = categorie.map(cat => {
-                return prodotti
-                    .filter(p => p.categoria === cat)
-                    .reduce((sum, p) => sum + p.quantita, 0);
-            });
+            chartOrdini.data.datasets[0].data = [12, 35, 72, 145];
+            chartOrdini.data.datasets[1].data = [480, 1420, 3120, 6540];
+            chartOrdini.update();
             
-            window.scorteChart.data = {
-                labels: categorie,
-                datasets: [{
-                    label: 'Quantità totale per categoria',
-                    data: scortePerCategoria,
-                    backgroundColor: 'rgba(231, 76, 60, 0.5)',
-                    borderColor: 'rgba(231, 76, 60, 1)',
-                    borderWidth: 1
-                }]
-            };
-            window.scorteChart.update();
-            
-            // Grafico prodotti più utilizzati (ordinati per quantità)
-            const prodottiOrdinati = [...prodotti].sort((a, b) => b.quantita - a.quantita);
-            const topProdotti = prodottiOrdinati.slice(0, 5);
-            
-            window.prodottiChart.data = {
-                labels: topProdotti.map(p => p.nome),
-                datasets: [{
-                    label: 'Quantità in magazzino',
-                    data: topProdotti.map(p => p.quantita),
-                    backgroundColor: 'rgba(243, 156, 18, 0.5)',
-                    borderColor: 'rgba(243, 156, 18, 1)',
-                    borderWidth: 1
-                }]
-            };
-            window.prodottiChart.update();
-        }
+            // Aggiorna progress bar scorte
+            const scorteBasse = inventario.filter(p => p.quantita <= p.scortaMin).length;
+            const percentualeScorte = 100 - (scorteBasse / inventario.length * 100);
+            document.getElementById('progress-scorte').style.width = `${percentualeScorte}%`;
+        });
     </script>
-    
-    <!-- Includi Chart.js per i grafici -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
 </html>
