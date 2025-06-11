@@ -3,2406 +3,588 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestione Magazzino Pizzeria PRO</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-	<link rel="manifest" href="/manifest.json">
+    <title>Gestione Comande Pizzeria</title>
     <style>
-        :root {
-            --primary-color: #e74c3c;
-            --primary-dark: #c0392b;
-            --secondary-color: #f39c12;
-            --secondary-dark: #d68910;
-            --dark-color: #2c3e50;
-            --dark-light: #34495e;
-            --light-color: #f8f9fa;
-            --light-dark: #e9ecef;
-            --success-color: #28a745;
-            --success-dark: #218838;
-            --warning-color: #ffc107;
-            --warning-dark: #e0a800;
-            --danger-color: #dc3545;
-            --info-color: #17a2b8;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s ease;
-            --border-radius: 8px;
-            --box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-        }
-        
         * {
             box-sizing: border-box;
-            margin: 0;
-            padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
         body {
-            background-color: #f8f9fa;
-            color: var(--dark-color);
-            line-height: 1.6;
-            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
         }
-        
         .container {
-            max-width: 1200px;
+            max-width: 800px;
             margin: 0 auto;
+            background-color: white;
             padding: 20px;
-            padding-bottom: 80px;
-        }
-        
-        header {
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-            color: white;
-            padding: 25px 0;
-            text-align: center;
-            border-radius: var(--border-radius);
-            margin-bottom: 30px;
-            box-shadow: var(--box-shadow);
-            position: relative;
-            border-bottom: 4px solid var(--secondary-color);
-        }
-        
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
-        }
-        
-        .header-actions {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            display: flex;
-            gap: 10px;
-        }
-        
-        .tabs {
-            display: flex;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            background-color: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            padding: 5px;
-        }
-        
-        .tab {
-            padding: 12px 24px;
-            cursor: pointer;
-            background-color: transparent;
-            border: none;
-            font-weight: 500;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            border-radius: calc(var(--border-radius) - 2px);
-            color: var(--dark-light);
-        }
-        
-        .tab:hover {
-            background-color: var(--light-dark);
-            color: var(--dark-color);
-        }
-        
-        .tab.active {
-            background-color: var(--primary-color);
-            color: white;
-            font-weight: bold;
-            box-shadow: var(--shadow);
-        }
-        
-        .tab i {
-            font-size: 1.1rem;
-        }
-        
-        .tab-content {
-            display: none;
-            padding: 25px;
-            background-color: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            animation: fadeIn 0.3s ease;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .tab-content.active {
-            display: block;
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-            font-size: 0.95rem;
-            background-color: white;
-            border-radius: var(--border-radius);
-            overflow: hidden;
-            box-shadow: var(--shadow);
-        }
-        
-        th, td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #dee2e6;
-        }
-        
-        th {
-            background-color: var(--primary-color);
-            color: white;
-            position: sticky;
-            top: 0;
-            font-weight: 600;
-        }
-        
-        tr:nth-child(even) {
-            background-color: rgba(0, 0, 0, 0.02);
-        }
-        
-        tr:hover {
-            background-color: rgba(0, 0, 0, 0.05);
-        }
-        
-        .btn {
-            padding: 8px 15px;
-            border: none;
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            font-size: 14px;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-weight: 500;
-            box-shadow: var(--shadow);
-        }
-        
-        .btn i {
-            font-size: 0.9rem;
-        }
-        
-        .btn-sm {
-            padding: 5px 10px;
-            font-size: 0.85rem;
-        }
-        
-        .btn-primary {
-            background-color: var(--primary-color);
-            color: white;
-        }
-        
-        .btn-primary:hover {
-            background-color: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-        
-        .btn-success {
-            background-color: var(--success-color);
-            color: white;
-        }
-        
-        .btn-success:hover {
-            background-color: var(--success-dark);
-            transform: translateY(-2px);
-        }
-        
-        .btn-warning {
-            background-color: var(--warning-color);
-            color: var(--dark-color);
-        }
-        
-        .btn-warning:hover {
-            background-color: var(--warning-dark);
-            transform: translateY(-2px);
-        }
-        
-        .btn-danger {
-            background-color: var(--danger-color);
-            color: white;
-        }
-        
-        .btn-danger:hover {
-            background-color: #c82333;
-            transform: translateY(-2px);
-        }
-        
-        .btn-info {
-            background-color: var(--info-color);
-            color: white;
-        }
-        
-        .btn-secondary {
-            background-color: var(--light-dark);
-            color: var(--dark-color);
-        }
-        
-        .btn-secondary:hover {
-            background-color: #d6d8db;
-            transform: translateY(-2px);
-        }
-        
-        .form-group {
-            margin-bottom: 18px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: 600;
-            color: var(--dark-light);
-        }
-        
-        input, select, textarea {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #ced4da;
-            border-radius: var(--border-radius);
-            font-size: 0.95rem;
-            transition: var(--transition);
-            background-color: var(--light-color);
-        }
-        
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.2);
-            background-color: white;
-        }
-        
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1050;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.5);
-            animation: fadeInModal 0.3s;
-        }
-        
-        @keyframes fadeInModal {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        .modal-content {
-            background-color: #fefefe;
-            margin: 5% auto;
-            padding: 25px;
-            border: none;
-            width: 90%;
-            max-width: 700px;
-            border-radius: var(--border-radius);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            animation: slideIn 0.3s;
-            border-top: 4px solid var(--primary-color);
-        }
-        
-        @keyframes slideIn {
-            from { transform: translateY(-50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        
-        .close:hover {
-            color: var(--dark-color);
-        }
-        
-        .alert {
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: var(--border-radius);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: var(--shadow);
-        }
-        
-        .alert i {
-            font-size: 1.2rem;
-        }
-        
-        .alert-success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        
-        .alert-danger {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        
-        .alert-warning {
-            background-color: #fff3cd;
-            color: #856404;
-            border: 1px solid #ffeeba;
-        }
-        
-        .alert-info {
-            background-color: #d1ecf1;
-            color: #0c5460;
-            border: 1px solid #bee5eb;
-        }
-        
-        .badge {
-            display: inline-block;
-            padding: 4px 8px;
-            font-size: 12px;
-            font-weight: bold;
-            line-height: 1;
-            color: white;
-            text-align: center;
-            white-space: nowrap;
-            vertical-align: middle;
             border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
-        
-        .badge-success {
-            background-color: var(--success-color);
+        h1, h2 {
+            color: #c62828;
         }
-        
-        .badge-warning {
-            background-color: var(--warning-color);
-            color: var(--dark-color);
-        }
-        
-        .badge-danger {
-            background-color: var(--danger-color);
-        }
-        
-        .badge-info {
-            background-color: var(--info-color);
-        }
-        
-        .badge-primary {
-            background-color: var(--primary-color);
-        }
-        
-        .search-container {
-            margin-bottom: 20px;
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        
-        .search-container input {
-            width: 300px;
-            max-width: 100%;
-            padding: 10px;
-            border: 1px solid #ced4da;
-            border-radius: var(--border-radius);
-        }
-        
-        .action-buttons {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-        
-        .stats-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        
-        .stat-card {
-            flex: 1;
-            min-width: 200px;
-            background-color: white;
-            padding: 20px;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            text-align: center;
-            transition: var(--transition);
-            border-top: 3px solid var(--primary-color);
-        }
-        
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        }
-        
-        .stat-card h3 {
-            color: var(--primary-color);
-            margin-bottom: 10px;
-            font-size: 1rem;
-        }
-        
-        .stat-card p {
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--dark-color);
-        }
-        
-        .card {
-            background-color: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            padding: 20px;
-            margin-bottom: 20px;
-            border-top: 3px solid var(--primary-color);
-        }
-        
-        .card-title {
-            color: var(--primary-color);
-            margin-bottom: 15px;
-            font-size: 1.2rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 600;
-        }
-        
-        .card-title i {
-            font-size: 1.1rem;
-        }
-        
-        .ordine-prodotto {
-            margin-bottom: 15px;
-            padding: 15px;
-            background-color: #f9f9f9;
-            border-radius: var(--border-radius);
-            border-left: 4px solid var(--primary-color);
-        }
-        
-        .progress-container {
-            margin-top: 30px;
-        }
-        
-        .progress-bar {
-            height: 10px;
-            background-color: #e0e0e0;
-            border-radius: 5px;
-            margin-bottom: 5px;
-            overflow: hidden;
-        }
-        
-        .progress {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-            border-radius: 5px;
-            transition: width 0.5s ease;
-        }
-        
-        .progress-labels {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.85rem;
-            color: var(--dark-light);
-        }
-        
-        .footer {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background-color: var(--dark-color);
+        button {
+            background-color: #c62828;
             color: white;
-            padding: 10px 20px;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #8e0000;
+        }
+        input, select {
+            padding: 10px;
+            margin: 5px 0;
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .section {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        .item-control {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            font-size: 0.9rem;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            margin: 10px 0;
         }
-        
-        .footer-actions {
-            display: flex;
-            gap: 10px;
+        .item-control span {
+            flex: 1;
         }
-        
-        .tooltip {
-            position: relative;
-            display: inline-block;
-        }
-        
-        .tooltip .tooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: var(--dark-color);
-            color: #fff;
+        .quantity {
+            margin: 0 10px;
+            min-width: 30px;
             text-align: center;
-            border-radius: 6px;
-            padding: 5px;
-            position: absolute;
-            z-index: 1;
-            bottom: 125%;
-            left: 50%;
-            transform: translateX(-50%);
-            opacity: 0;
-            transition: opacity 0.3s;
-            font-size: 0.8rem;
         }
-        
-        .tooltip:hover .tooltiptext {
-            visibility: visible;
-            opacity: 1;
+        .hidden {
+            display: none;
         }
-        
-        @media print {
-            body * {
-                visibility: hidden;
-            }
-            .tab-content.active, .tab-content.active * {
-                visibility: visible;
-            }
-            .tab-content.active {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
-                padding: 20px;
-                box-shadow: none;
-                border: none;
-            }
-            .action-buttons, .search-container, .tabs, header, .footer {
-                display: none !important;
-            }
-            table {
-                width: 100% !important;
-                font-size: 12px !important;
-            }
-            th, td {
-                padding: 8px 10px !important;
-            }
+        .order-summary {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
         }
-        
-        @media (max-width: 768px) {
-            .tabs {
-                flex-direction: column;
-            }
-            
-            .tab {
-                border-radius: 0;
-                margin-right: 0;
-                margin-bottom: 5px;
-                justify-content: center;
-            }
-            
-            .tab.active {
-                border-radius: var(--border-radius);
-            }
-            
-            .stats-container {
-                flex-direction: column;
-            }
-            
-            .search-container {
-                flex-direction: column;
-            }
-            
-            .search-container input {
-                width: 100%;
-            }
-            
-            .action-buttons {
-                flex-direction: column;
-            }
-            
-            .modal-content {
-                width: 95%;
-                margin: 10% auto;
-            }
-            
-            .header-actions {
-                position: static;
-                justify-content: center;
-                margin-top: 15px;
-            }
-		@media (max-width: 480px) {
-  /* Stili specifici per mobile */
-}
+        .table-list {
+            margin-top: 20px;
         }
-	    
+        .table-item {
+            padding: 10px;
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1><i class="fas fa-pizza-slice"></i> Gestione Magazzino Pizzeria PRO</h1>
-            <p>Sistema completo per la gestione delle scorte e degli ordini</p>
-            
-            <div class="header-actions">
-                <button class="btn btn-success btn-sm" id="btn-backup"><i class="fas fa-save"></i> Backup</button>
-                <button class="btn btn-info btn-sm" id="btn-export"><i class="fas fa-file-export"></i> Esporta</button>
-            </div>
-        </header>
-        
-        <div class="tabs">
-            <div class="tab active" data-tab="inventario">
-                <i class="fas fa-boxes"></i> Inventario
-            </div>
-            <div class="tab" data-tab="ordini">
-                <i class="fas fa-truck"></i> Ordini
-            </div>
-            <div class="tab" data-tab="scadenze">
-                <i class="fas fa-calendar-times"></i> Scadenze
-            </div>
-            <div class="tab" data-tab="statistiche">
-                <i class="fas fa-chart-bar"></i> Statistiche
-            </div>
+        <!-- Schermata 1: Inserimento operatore -->
+        <div id="screen-1" class="section">
+            <h1>Gestione Comande Pizzeria</h1>
+            <h2>Inserisci il tuo nome</h2>
+            <input type="text" id="operator-name" placeholder="Nome operatore">
+            <button onclick="goToTableScreen()">Avanti</button>
         </div>
-        
-        <!-- Tab Inventario -->
-        <div id="inventario" class="tab-content active">
-            <div class="action-buttons">
-                <div class="search-container">
-                    <input type="text" id="search-inventario" placeholder="Cerca prodotto...">
-                    <button class="btn btn-secondary" id="btn-reset-search"><i class="fas fa-times"></i> Reset</button>
-                </div>
-                
-                <div>
-                    <button class="btn btn-primary" id="btn-aggiungi-prodotto">
-                        <i class="fas fa-plus"></i> Aggiungi Prodotto
-                    </button>
-                    <button class="btn btn-info" id="btn-print-inventario">
-                        <i class="fas fa-print"></i> Stampa
-                    </button>
-                </div>
+
+        <!-- Schermata 2: Selezione tavolo e bevande -->
+        <div id="screen-2" class="section hidden">
+            <h2>Dettagli Tavolo</h2>
+            <input type="text" id="table-number" placeholder="Numero tavolo">
+            <input type="number" id="people-count" placeholder="Numero persone" min="1">
+            
+            <h2>Bevande</h2>
+            <div class="item-control">
+                <span>Acqua Naturale</span>
+                <button onclick="changeQuantity('water-still', -1)">-</button>
+                <span id="water-still" class="quantity">0</span>
+                <button onclick="changeQuantity('water-still', 1)">+</button>
+            </div>
+            <div class="item-control">
+                <span>Acqua Frizzante</span>
+                <button onclick="changeQuantity('water-sparkling', -1)">-</button>
+                <span id="water-sparkling" class="quantity">0</span>
+                <button onclick="changeQuantity('water-sparkling', 1)">+</button>
+            </div>
+            <div class="item-control">
+                <span>Coca Cola Lattina (Normale)</span>
+                <button onclick="changeQuantity('coke-normal', -1)">-</button>
+                <span id="coke-normal" class="quantity">0</span>
+                <button onclick="changeQuantity('coke-normal', 1)">+</button>
+            </div>
+            <div class="item-control">
+                <span>Coca Cola Lattina (Zero)</span>
+                <button onclick="changeQuantity('coke-zero', -1)">-</button>
+                <span id="coke-zero" class="quantity">0</span>
+                <button onclick="changeQuantity('coke-zero', 1)">+</button>
+            </div>
+            <div class="item-control">
+                <span>Birra alla Spina</span>
+                <button onclick="changeQuantity('beer-tap', -1)">-</button>
+                <span id="beer-tap" class="quantity">0</span>
+                <button onclick="changeQuantity('beer-tap', 1)">+</button>
+            </div>
+            <div class="item-control">
+                <span>Birra in Bottiglia</span>
+                <button onclick="changeQuantity('beer-bottle', -1)">-</button>
+                <span id="beer-bottle" class="quantity">0</span>
+                <button onclick="changeQuantity('beer-bottle', 1)">+</button>
+            </div>
+            <div class="item-control">
+                <span>Vino Bianco (Fermo)</span>
+                <button onclick="changeQuantity('wine-white-still', -1)">-</button>
+                <span id="wine-white-still" class="quantity">0</span>
+                <button onclick="changeQuantity('wine-white-still', 1)">+</button>
+            </div>
+            <div class="item-control">
+                <span>Vino Bianco (Frizzante)</span>
+                <button onclick="changeQuantity('wine-white-sparkling', -1)">-</button>
+                <span id="wine-white-sparkling" class="quantity">0</span>
+                <button onclick="changeQuantity('wine-white-sparkling', 1)">+</button>
             </div>
             
-            <div class="table-responsive">
-                <table id="table-inventario">
-                    <thead>
-                        <tr>
-                            <th>Nome</th>
-                            <th>Categoria</th>
-                            <th>Quantità</th>
-                            <th>Unita</th>
-                            <th>Scorta Minima</th>
-                            <th>Stato</th>
-                            <th>Azioni</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- I dati verranno inseriti dinamicamente via JavaScript -->
-                    </tbody>
-                </table>
-            </div>
+            <button onclick="goToMenuScreen()">Avanti</button>
         </div>
-        
-        <!-- Tab Ordini -->
-        <div id="ordini" class="tab-content">
-            <div class="action-buttons">
-                <div class="search-container">
-                    <input type="text" id="search-ordini" placeholder="Cerca ordine...">
-                    <button class="btn btn-secondary" id="btn-reset-search-ordini"><i class="fas fa-times"></i> Reset</button>
-                </div>
-                
-                <div>
-                    <button class="btn btn-primary" id="btn-nuovo-ordine">
-                        <i class="fas fa-plus"></i> Nuovo Ordine
-                    </button>
-                    <button class="btn btn-info" id="btn-print-ordini">
-                        <i class="fas fa-print"></i> Stampa
-                    </button>
-                </div>
+
+        <!-- Schermata 3: Selezione menu -->
+        <div id="screen-3" class="section hidden">
+            <h2>Selezione Menu</h2>
+            <div id="table-info"></div>
+            
+            <h3>Menu Completo (Pizza + Bibita + Dolce)</h3>
+            <div class="item-control">
+                <span>Quantità</span>
+                <button onclick="changeQuantity('menu-complete', -1)">-</button>
+                <span id="menu-complete" class="quantity">0</span>
+                <button onclick="changeQuantity('menu-complete', 1)">+</button>
             </div>
             
-            <div class="table-responsive">
-                <table id="table-ordini">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Fornitore</th>
-                            <th>Data</th>
-                            <th>Prodotti</th>
-                            <th>Totale</th>
-                            <th>Stato</th>
-                            <th>Azioni</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- I dati verranno inseriti dinamicamente via JavaScript -->
-                    </tbody>
-                </table>
+            <h3>Menu Solo Pizza</h3>
+            <div class="item-control">
+                <span>Quantità</span>
+                <button onclick="changeQuantity('menu-pizza-only', -1)">-</button>
+                <span id="menu-pizza-only" class="quantity">0</span>
+                <button onclick="changeQuantity('menu-pizza-only', 1)">+</button>
             </div>
+            
+            <h3>Pizze Singole</h3>
+            <select id="pizza-type">
+                <option value="margherita">Margherita</option>
+                <option value="diavola">Diavola</option>
+                <option value="quattro-formaggi">Quattro Formaggi</option>
+                <option value="capricciosa">Capricciosa</option>
+                <option value="vegetariana">Vegetariana</option>
+            </select>
+            <div class="item-control">
+                <span>Quantità</span>
+                <button onclick="changeQuantity('single-pizza', -1)">-</button>
+                <span id="single-pizza" class="quantity">0</span>
+                <button onclick="changeQuantity('single-pizza', 1)">+</button>
+            </div>
+            <button onclick="addSinglePizza()">Aggiungi Pizza</button>
+            
+            <div id="pizza-list" class="order-summary">
+                <h4>Pizze Aggiunte</h4>
+                <div id="pizzas-added"></div>
+            </div>
+            
+            <button onclick="goToSummaryScreen()">Riepilogo</button>
         </div>
-        
-        <!-- Tab Scadenze -->
-        <div id="scadenze" class="tab-content">
-            <div class="action-buttons">
-                <div class="search-container">
-                    <input type="text" id="search-scadenze" placeholder="Cerca prodotto in scadenza...">
-                    <button class="btn btn-secondary" id="btn-reset-search-scadenze"><i class="fas fa-times"></i> Reset</button>
-                </div>
-                
-                <div>
-                    <button class="btn btn-primary" id="btn-aggiungi-scadenza">
-                        <i class="fas fa-plus"></i> Aggiungi Scadenza
-                    </button>
-                    <button class="btn btn-info" id="btn-print-scadenze">
-                        <i class="fas fa-print"></i> Stampa
-                    </button>
-                </div>
-            </div>
+
+        <!-- Schermata 4: Riepilogo ordine -->
+        <div id="screen-4" class="section hidden">
+            <h2>Riepilogo Ordine</h2>
+            <div id="order-summary" class="order-summary"></div>
             
-            <div class="table-responsive">
-                <table id="table-scadenze">
-                    <thead>
-                        <tr>
-                            <th>Prodotto</th>
-                            <th>Lotto</th>
-                            <th>Quantità</th>
-                            <th>Data Scadenza</th>
-                            <th>Giorni alla scadenza</th>
-                            <th>Azioni</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- I dati verranno inseriti dinamicamente via JavaScript -->
-                    </tbody>
-                </table>
-            </div>
+            <button onclick="saveOrder()">Conferma Ordine</button>
+            <button onclick="addAnotherTable()">Aggiungi un altro tavolo</button>
         </div>
-        
-        <!-- Tab Statistiche -->
-        <div id="statistiche" class="tab-content">
-            <div class="action-buttons">
-                <button class="btn btn-info" id="btn-print-stats">
-                    <i class="fas fa-print"></i> Stampa Report
-                </button>
-            </div>
-            
-            <div class="stats-container">
-                <div class="stat-card">
-                    <h3><i class="fas fa-box-open"></i> Prodotti in magazzino</h3>
-                    <p id="stat-prodotti-totali">0</p>
-                </div>
-                <div class="stat-card">
-                    <h3><i class="fas fa-exclamation-triangle"></i> Prodotti in esaurimento</h3>
-                    <p id="stat-prodotti-esaurimento">0</p>
-                </div>
-                <div class="stat-card">
-                    <h3><i class="fas fa-calendar-times"></i> Prodotti in scadenza</h3>
-                    <p id="stat-prodotti-scadenza">0</p>
-                </div>
-                <div class="stat-card">
-                    <h3><i class="fas fa-euro-sign"></i> Spesa mensile</h3>
-                    <p id="stat-spesa-mensile">€0.00</p>
-                </div>
-            </div>
-            
-            <div class="card">
-                <div class="card-title">
-                    <i class="fas fa-chart-line"></i> Andamento scorte
-                </div>
-                <canvas id="chart-scorte" width="400" height="200"></canvas>
-                
-                <div class="progress-container">
-                    <div class="progress-labels">
-                        <span>Scorte basse</span>
-                        <span>Scorte ottimali</span>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress" id="progress-scorte" style="width: 0%"></div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="card">
-                <div class="card-title">
-                    <i class="fas fa-star"></i> Prodotti più utilizzati
-                </div>
-                <canvas id="chart-prodotti" width="400" height="200"></canvas>
-            </div>
-            
-            <div class="card">
-                <div class="card-title">
-                    <i class="fas fa-history"></i> Ultimi ordini
-                </div>
-                <canvas id="chart-ordini" width="400" height="200"></canvas>
-            </div>
+
+        <!-- Schermata 5: Visualizzazione ordini -->
+        <div id="screen-5" class="section hidden">
+            <h2>Storico Ordini</h2>
+            <button onclick="goToTableScreen()">Nuovo Ordine</button>
+            <div id="orders-list" class="table-list"></div>
         </div>
     </div>
-    
-    <!-- Footer con stato e azioni -->
-    <div class="footer">
-        <div id="last-backup">
-            <i class="fas fa-info-circle"></i> Ultimo backup: <span id="last-backup-time">Mai</span>
-        </div>
-        
-        <div class="footer-actions">
-            <button class="btn btn-success btn-sm" id="btn-save-all">
-                <i class="fas fa-save"></i> Salva tutto
-            </button>
-            <button class="btn btn-danger btn-sm" id="btn-reset-all">
-                <i class="fas fa-trash-alt"></i> Reset dati
-            </button>
-        </div>
-    </div>
-    
-    <!-- Modale Aggiungi/Modifica Prodotto -->
-    <div id="modal-prodotto" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2 id="modal-prodotto-titolo"><i class="fas fa-box"></i> Aggiungi Prodotto</h2>
-            
-            <div id="alert-prodotto" class="alert" style="display: none;"></div>
-            
-            <form id="form-prodotto">
-                <input type="hidden" id="prodotto-id">
-                
-                <div class="form-group">
-                    <label for="prodotto-nome"><i class="fas fa-tag"></i> Nome Prodotto</label>
-                    <input type="text" id="prodotto-nome" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="prodotto-categoria"><i class="fas fa-list"></i> Categoria</label>
-                    <select id="prodotto-categoria" required>
-                        <option value="">Seleziona categoria</option>
-                        <option value="Farine e basi">Farine e basi</option>
-                        <option value="Condimenti">Condimenti</option>
-                        <option value="Formaggi">Formaggi</option>
-                        <option value="Salumi">Salumi</option>
-                        <option value="Verdura">Verdura</option>
-                        <option value="Bevande">Bevande</option>
-                        <option value="Altro">Altro</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="prodotto-quantita"><i class="fas fa-balance-scale"></i> Quantità</label>
-                    <input type="number" id="prodotto-quantita" step="0.01" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="prodotto-unita"><i class="fas fa-ruler"></i> Unità di misura</label>
-                    <select id="prodotto-unita" required>
-                        <option value="kg">kg</option>
-                        <option value="g">g</option>
-                        <option value="l">l</option>
-                        <option value="ml">ml</option>
-                        <option value="pz">pz</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="prodotto-scorta-min"><i class="fas fa-exclamation-circle"></i> Scorta minima</label>
-                    <input type="number" id="prodotto-scorta-min" step="0.01" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="prodotto-prezzo"><i class="fas fa-euro-sign"></i> Prezzo unitario (€)</label>
-                    <input type="number" id="prodotto-prezzo" step="0.01" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="prodotto-fornitore"><i class="fas fa-truck"></i> Fornitore principale</label>
-                    <input type="text" id="prodotto-fornitore">
-                </div>
-                
-                <div class="form-group">
-                    <label for="prodotto-note"><i class="fas fa-sticky-note"></i> Note</label>
-                    <textarea id="prodotto-note" rows="2"></textarea>
-                </div>
-                
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-save"></i> Salva
-                </button>
-                <button type="button" class="btn btn-secondary" id="btn-cancel-prodotto">
-                    <i class="fas fa-times"></i> Annulla
-                </button>
-            </form>
-        </div>
-    </div>
-    
-    <!-- Modale Nuovo Ordine -->
-    <div id="modal-ordine" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2><i class="fas fa-truck"></i> Nuovo Ordine</h2>
-            
-            <div id="alert-ordine" class="alert" style="display: none;"></div>
-            
-            <form id="form-ordine">
-                <div class="form-group">
-                    <label for="ordine-fornitore"><i class="fas fa-building"></i> Fornitore</label>
-                    <input type="text" id="ordine-fornitore" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="ordine-data"><i class="fas fa-calendar-alt"></i> Data ordine</label>
-                    <input type="date" id="ordine-data" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="ordine-note"><i class="fas fa-sticky-note"></i> Note</label>
-                    <textarea id="ordine-note" rows="3" style="width: 100%;"></textarea>
-                </div>
-                
-                <h3><i class="fas fa-boxes"></i> Prodotti</h3>
-                <div id="ordine-prodotti-container">
-                    <div class="ordine-prodotto">
-                        <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-                            <select class="ordine-prodotto-nome" style="flex: 3;" required>
-                                <option value="">Seleziona prodotto</option>
-                                <!-- I prodotti verranno inseriti dinamicamente -->
-                            </select>
-                            <input type="number" class="ordine-prodotto-quantita" step="0.01" placeholder="Q.tà" style="flex: 1;" required>
-                            <button type="button" class="btn btn-danger rimuovi-prodotto"><i class="fas fa-minus"></i></button>
-                        </div>
-                    </div>
-                </div>
-                
-                <button type="button" id="btn-aggiungi-prodotto-ordine" class="btn btn-secondary" style="margin-bottom: 20px;">
-                    <i class="fas fa-plus"></i> Aggiungi prodotto
-                </button>
-                
-                <div class="form-group">
-                    <label for="ordine-totale"><i class="fas fa-euro-sign"></i> Totale ordine (€)</label>
-                    <input type="number" id="ordine-totale" step="0.01" readonly>
-                </div>
-                
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-check"></i> Conferma ordine
-                </button>
-                <button type="button" class="btn btn-secondary" id="btn-cancel-ordine">
-                    <i class="fas fa-times"></i> Annulla
-                </button>
-            </form>
-        </div>
-    </div>
-    
-    <!-- Modale Dettaglio Ordine -->
-    <div id="modal-dettaglio-ordine" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2><i class="fas fa-info-circle"></i> Dettaglio Ordine</h2>
-            
-            <div id="dettaglio-ordine-info">
-                <p><strong><i class="fas fa-building"></i> Fornitore:</strong> <span id="dettaglio-ordine-fornitore"></span></p>
-                <p><strong><i class="fas fa-calendar-alt"></i> Data ordine:</strong> <span id="dettaglio-ordine-data"></span></p>
-                <p><strong><i class="fas fa-info-circle"></i> Stato:</strong> <span id="dettaglio-ordine-stato"></span></p>
-                <p><strong><i class="fas fa-sticky-note"></i> Note:</strong> <span id="dettaglio-ordine-note"></span></p>
-            </div>
-            
-            <h3><i class="fas fa-boxes"></i> Prodotti ordinati</h3>
-            <div class="table-responsive">
-                <table id="dettaglio-ordine-prodotti">
-                    <thead>
-                        <tr>
-                            <th>Prodotto</th>
-                            <th>Quantità</th>
-                            <th>Prezzo unitario</th>
-                            <th>Totale</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- I dati verranno inseriti dinamicamente -->
-                    </tbody>
-                </table>
-            </div>
-            
-            <p style="text-align: right; margin-top: 10px;">
-                <strong><i class="fas fa-euro-sign"></i> Totale ordine:</strong> €<span id="dettaglio-ordine-totale">0.00</span>
-            </p>
-            
-            <div id="dettaglio-ordine-azioni" style="margin-top: 20px;">
-                <button id="btn-ordine-ricevuto" class="btn btn-success">
-                    <i class="fas fa-check"></i> Segna come ricevuto
-                </button>
-                <button id="btn-ordine-annulla" class="btn btn-danger">
-                    <i class="fas fa-ban"></i> Annulla ordine
-                </button>
-                <button id="btn-print-ordine" class="btn btn-info">
-                    <i class="fas fa-print"></i> Stampa
-                </button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Modale Aggiungi Scadenza -->
-    <div id="modal-scadenza" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2><i class="fas fa-calendar-times"></i> Aggiungi Scadenza</h2>
-            
-            <div id="alert-scadenza" class="alert"
-			            style="display: none;"></div>
-            
-            <form id="form-scadenza">
-                <div class="form-group">
-                    <label for="scadenza-prodotto"><i class="fas fa-box"></i> Prodotto</label>
-                    <select id="scadenza-prodotto" required>
-                        <option value="">Seleziona prodotto</option>
-                        <!-- I prodotti verranno inseriti dinamicamente -->
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="scadenza-lotto"><i class="fas fa-barcode"></i> Lotto</label>
-                    <input type="text" id="scadenza-lotto" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="scadenza-quantita"><i class="fas fa-balance-scale"></i> Quantità</label>
-                    <input type="number" id="scadenza-quantita" step="0.01" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="scadenza-data"><i class="fas fa-calendar-day"></i> Data scadenza</label>
-                    <input type="date" id="scadenza-data" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="scadenza-note"><i class="fas fa-sticky-note"></i> Note</label>
-                    <textarea id="scadenza-note" rows="2"></textarea>
-                </div>
-                
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-save"></i> Salva
-                </button>
-                <button type="button" class="btn btn-secondary" id="btn-cancel-scadenza">
-                    <i class="fas fa-times"></i> Annulla
-                </button>
-            </form>
-        </div>
-    </div>
-    
-    <!-- Modale Conferma -->
-    <div id="modal-confirm" class="modal">
-        <div class="modal-content" style="max-width: 500px;">
-            <span class="close">&times;</span>
-            <h2><i class="fas fa-question-circle"></i> Conferma</h2>
-            <p id="confirm-message">Sei sicuro di voler procedere?</p>
-            <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
-                <button id="btn-confirm-no" class="btn btn-secondary">
-                    <i class="fas fa-times"></i> Annulla
-                </button>
-                <button id="btn-confirm-yes" class="btn btn-danger">
-                    <i class="fas fa-check"></i> Conferma
-                </button>
-            </div>
-        </div>
-    </div>
-    
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <script>
         // Variabili globali
-        let prodotti = [];
-        let ordini = [];
-        let scadenze = [];
-        let currentTab = 'inventario';
-        let lastBackupTime = null;
+        let currentOrder = {
+            operator: '',
+            table: '',
+            people: 0,
+            drinks: {
+                waterStill: 0,
+                waterSparkling: 0,
+                cokeNormal: 0,
+                cokeZero: 0,
+                beerTap: 0,
+                beerBottle: 0,
+                wineWhiteStill: 0,
+                wineWhiteSparkling: 0
+            },
+            menus: {
+                complete: 0,
+                pizzaOnly: 0
+            },
+            pizzas: []
+        };
         
-        // Inizializzazione al caricamento della pagina
-        document.addEventListener('DOMContentLoaded', function() {
-            // Carica i dati dal localStorage
-            loadData();
-            
-            // Imposta i gestori degli eventi
-            setupEventListeners();
-            
-            // Aggiorna l'interfaccia
-            updateUI();
-            
-            // Inizializza i grafici
-            initCharts();
-        });
+        let allOrders = [];
         
-        // Funzione per caricare i dati dal localStorage
-        function loadData() {
-            if(localStorage.getItem('magazzinoPizzeria')) {
-                const data = JSON.parse(localStorage.getItem('magazzinoPizzeria'));
-                prodotti = data.prodotti || [];
-                ordini = data.ordini || [];
-                scadenze = data.scadenze || [];
-                lastBackupTime = data.lastBackupTime || null;
-            } else {
-                // Dati di esempio iniziali
-                prodotti = [
-                    { id: 1, nome: "Farina 00", categoria: "Farine e basi", quantita: 25, unita: "kg", scortaMin: 10, prezzo: 0.85, fornitore: "Molino Bianchi", note: "" },
-                    { id: 2, nome: "Mozzarella", categoria: "Formaggi", quantita: 15, unita: "kg", scortaMin: 8, prezzo: 8.50, fornitore: "Caseificio Rossi", note: "Mozzarella di bufala" },
-                    { id: 3, nome: "Pomodoro pelato", categoria: "Condimenti", quantita: 30, unita: "kg", scortaMin: 15, prezzo: 2.20, fornitore: "Orti S.p.A.", note: "Confezione da 5kg" },
-                    { id: 4, nome: "Olio extravergine", categoria: "Condimenti", quantita: 10, unita: "l", scortaMin: 5, prezzo: 12.00, fornitore: "Oleificio Verde", note: "Biologico" },
-                    { id: 5, nome: "Prosciutto crudo", categoria: "Salumi", quantita: 5, unita: "kg", scortaMin: 3, prezzo: 22.00, fornitore: "Salumificio Prestige", note: "DOP" }
-                ];
-                
-                ordini = [
-                    { 
-                        id: 1, 
-                        fornitore: "Molino Bianchi", 
-                        data: "2023-05-15", 
-                        prodotti: [
-                            { prodottoId: 1, quantita: 50, prezzo: 0.85 }
-                        ], 
-                        totale: 42.50, 
-                        stato: "ricevuto", 
-                        note: "Ordine urgente" 
-                    },
-                    { 
-                        id: 2, 
-                        fornitore: "Caseificio Rossi", 
-                        data: "2023-05-18", 
-                        prodotti: [
-                            { prodottoId: 2, quantita: 20, prezzo: 8.50 }
-                        ], 
-                        totale: 170.00, 
-                        stato: "in attesa", 
-                        note: "" 
-                    }
-                ];
-                
-                scadenze = [
-                    { 
-                        id: 1, 
-                        prodottoId: 2, 
-                        lotto: "MOZ20230501", 
-                        quantita: 5, 
-                        dataScadenza: "2023-06-15", 
-                        note: "Conservare in frigorifero" 
-                    },
-                    { 
-                        id: 2, 
-                        prodottoId: 5, 
-                        lotto: "PROS20230415", 
-                        quantita: 2, 
-                        dataScadenza: "2023-05-30", 
-                        note: "Affettare al momento" 
-                    }
-                ];
-                
-                saveData();
+        // Funzioni per cambiare schermata
+        function showScreen(screenNumber) {
+            document.querySelectorAll('.section').forEach(screen => {
+                screen.classList.add('hidden');
+            });
+            document.getElementById(`screen-${sreenNumber}`).classList.remove('hidden');
+        }
+        
+        function goToTableScreen() {
+            const operatorName = document.getElementById('operator-name').value;
+            if (!operatorName) {
+                alert('Inserisci il nome dell\'operatore');
+                return;
             }
-            
-            // Aggiorna l'ora dell'ultimo backup
-            if(lastBackupTime) {
-                document.getElementById('last-backup-time').textContent = new Date(lastBackupTime).toLocaleString();
-            }
-        }
-
-	    if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js');
-}
-        
-        // Funzione per salvare i dati nel localStorage
-        function saveData() {
-            const data = {
-                prodotti,
-                ordini,
-                scadenze,
-                lastBackupTime
-            };
-            
-            localStorage.setItem('magazzinoPizzeria', JSON.stringify(data));
+            currentOrder.operator = operatorName;
+            showScreen(2);
         }
         
-        // Funzione per impostare i gestori degli eventi
-        function setupEventListeners() {
-            // Gestione tab
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.addEventListener('click', function() {
-                    document.querySelector('.tab.active').classList.remove('active');
-                    this.classList.add('active');
-                    
-                    document.querySelector('.tab-content.active').classList.remove('active');
-                    document.getElementById(this.dataset.tab).classList.add('active');
-                    
-                    currentTab = this.dataset.tab;
-                    updateUI();
-                });
-            });
+        function goToMenuScreen() {
+            const tableNumber = document.getElementById('table-number').value;
+            const peopleCount = document.getElementById('people-count').value;
             
-            // Pulsanti header
-            document.getElementById('btn-backup').addEventListener('click', backupData);
-            document.getElementById('btn-export').addEventListener('click', exportData);
-            
-            // Pulsanti footer
-            document.getElementById('btn-save-all').addEventListener('click', saveData);
-            document.getElementById('btn-reset-all').addEventListener('click', confirmResetData);
-            
-            // Pulsanti inventario
-            document.getElementById('btn-aggiungi-prodotto').addEventListener('click', showAddProdottoModal);
-            document.getElementById('btn-print-inventario').addEventListener('click', printInventario);
-            document.getElementById('search-inventario').addEventListener('input', filterInventario);
-            document.getElementById('btn-reset-search').addEventListener('click', resetSearchInventario);
-            
-            // Pulsanti ordini
-            document.getElementById('btn-nuovo-ordine').addEventListener('click', showAddOrdineModal);
-            document.getElementById('btn-print-ordini').addEventListener('click', printOrdini);
-            document.getElementById('search-ordini').addEventListener('input', filterOrdini);
-            document.getElementById('btn-reset-search-ordini').addEventListener('click', resetSearchOrdini);
-            
-            // Pulsanti scadenze
-            document.getElementById('btn-aggiungi-scadenza').addEventListener('click', showAddScadenzaModal);
-            document.getElementById('btn-print-scadenze').addEventListener('click', printScadenze);
-            document.getElementById('search-scadenze').addEventListener('input', filterScadenze);
-            document.getElementById('btn-reset-search-scadenze').addEventListener('click', resetSearchScadenze);
-            
-            // Pulsanti statistiche
-            document.getElementById('btn-print-stats').addEventListener('click', printStats);
-            
-            // Modale prodotto
-            document.getElementById('btn-cancel-prodotto').addEventListener('click', hideModalProdotto);
-            document.getElementById('form-prodotto').addEventListener('submit', saveProdotto);
-            
-            // Modale ordine
-            document.getElementById('btn-cancel-ordine').addEventListener('click', hideModalOrdine);
-            document.getElementById('form-ordine').addEventListener('submit', saveOrdine);
-            document.getElementById('btn-aggiungi-prodotto-ordine').addEventListener('click', addProdottoToOrdine);
-            
-            // Modale scadenza
-            document.getElementById('btn-cancel-scadenza').addEventListener('click', hideModalScadenza);
-            document.getElementById('form-scadenza').addEventListener('submit', saveScadenza);
-            
-            // Modale conferma
-            document.getElementById('btn-confirm-no').addEventListener('click', hideModalConfirm);
-            
-            // Chiudi modali con il pulsante X
-            document.querySelectorAll('.modal .close').forEach(closeBtn => {
-                closeBtn.addEventListener('click', function() {
-                    this.closest('.modal').style.display = 'none';
-                });
-            });
-            
-            // Chiudi modali cliccando fuori
-            window.addEventListener('click', function(event) {
-                if(event.target.classList.contains('modal')) {
-                    event.target.style.display = 'none';
-                }
-            });
-        }
-        
-        // Funzione per aggiornare l'interfaccia utente
-        function updateUI() {
-            updateInventarioTable();
-            updateOrdiniTable();
-            updateScadenzeTable();
-            updateStats();
-            updateCharts();
-        }
-        
-        // Funzione per aggiornare la tabella inventario
-        function updateInventarioTable() {
-            const tableBody = document.querySelector('#table-inventario tbody');
-            tableBody.innerHTML = '';
-            
-            prodotti.forEach(prodotto => {
-                const stato = getStatoProdotto(prodotto);
-                
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${prodotto.nome}</td>
-                    <td>${prodotto.categoria}</td>
-                    <td>${prodotto.quantita}</td>
-                    <td>${prodotto.unita}</td>
-                    <td>${prodotto.scortaMin}</td>
-                    <td>${stato.badge}</td>
-                    <td>
-                        <button class="btn btn-warning btn-sm edit-prodotto" data-id="${prodotto.id}">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="btn btn-danger btn-sm delete-prodotto" data-id="${prodotto.id}">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </td>
-                `;
-                
-                tableBody.appendChild(row);
-            });
-            
-            // Aggiungi eventi ai pulsanti
-            document.querySelectorAll('.edit-prodotto').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    showEditProdottoModal(parseInt(this.dataset.id));
-                });
-            });
-            
-            document.querySelectorAll('.delete-prodotto').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    confirmDeleteProdotto(parseInt(this.dataset.id));
-                });
-            });
-        }
-        
-        // Funzione per ottenere lo stato di un prodotto
-        function getStatoProdotto(prodotto) {
-            const percentuale = (prodotto.quantita / prodotto.scortaMin) * 100;
-            
-            if(percentuale <= 30) {
-                return {
-                    testo: 'Esaurimento',
-                    badge: '<span class="badge badge-danger">Esaurimento</span>',
-                    classe: 'text-danger'
-                };
-            } else if(percentuale <= 70) {
-                return {
-                    testo: 'Attenzione',
-                    badge: '<span class="badge badge-warning">Attenzione</span>',
-                    classe: 'text-warning'
-                };
-            } else {
-                return {
-                    testo: 'OK',
-                    badge: '<span class="badge badge-success">OK</span>',
-                    classe: 'text-success'
-                };
-            }
-        }
-        
-        // Funzione per aggiornare la tabella ordini
-        function updateOrdiniTable() {
-            const tableBody = document.querySelector('#table-ordini tbody');
-            tableBody.innerHTML = '';
-            
-            ordini.forEach(ordine => {
-                const statoBadge = ordine.stato === 'ricevuto' 
-                    ? '<span class="badge badge-success">Ricevuto</span>' 
-                    : ordine.stato === 'in attesa' 
-                        ? '<span class="badge badge-warning">In attesa</span>' 
-                        : '<span class="badge badge-danger">Annullato</span>';
-                
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${ordine.id}</td>
-                    <td>${ordine.fornitore}</td>
-                    <td>${formatDate(ordine.data)}</td>
-                    <td>${ordine.prodotti.length}</td>
-                    <td>€${ordine.totale.toFixed(2)}</td>
-                    <td>${statoBadge}</td>
-                    <td>
-                        <button class="btn btn-info btn-sm view-ordine" data-id="${ordine.id}">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                        ${ordine.stato === 'in attesa' ? `
-                        <button class="btn btn-warning btn-sm edit-ordine" data-id="${ordine.id}">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="btn btn-danger btn-sm delete-ordine" data-id="${ordine.id}">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                        ` : ''}
-                    </td>
-                `;
-                
-                tableBody.appendChild(row);
-            });
-            
-            // Aggiungi eventi ai pulsanti
-            document.querySelectorAll('.view-ordine').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    showDettaglioOrdineModal(parseInt(this.dataset.id));
-                });
-            });
-            
-            document.querySelectorAll('.edit-ordine').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    showEditOrdineModal(parseInt(this.dataset.id));
-                });
-            });
-            
-            document.querySelectorAll('.delete-ordine').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    confirmDeleteOrdine(parseInt(this.dataset.id));
-                });
-            });
-        }
-        
-        // Funzione per aggiornare la tabella scadenze
-        function updateScadenzeTable() {
-            const tableBody = document.querySelector('#table-scadenze tbody');
-            tableBody.innerHTML = '';
-            
-            scadenze.forEach(scadenza => {
-                const prodotto = prodotti.find(p => p.id === scadenza.prodottoId);
-                const giorniAllaScadenza = getGiorniAllaScadenza(scadenza.dataScadenza);
-                
-                let badge;
-                if(giorniAllaScadenza <= 0) {
-                    badge = '<span class="badge badge-danger">Scaduto</span>';
-                } else if(giorniAllaScadenza <= 7) {
-                    badge = `<span class="badge badge-warning">${giorniAllaScadenza} giorni</span>`;
-                } else {
-                    badge = `<span class="badge badge-success">${giorniAllaScadenza} giorni</span>`;
-                }
-                
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${prodotto ? prodotto.nome : 'Prodotto non trovato'}</td>
-                    <td>${scadenza.lotto}</td>
-                    <td>${scadenza.quantita} ${prodotto ? prodotto.unita : ''}</td>
-                    <td>${formatDate(scadenza.dataScadenza)}</td>
-                    <td>${badge}</td>
-                    <td>
-                        <button class="btn btn-danger btn-sm delete-scadenza" data-id="${scadenza.id}">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </td>
-                `;
-                
-                tableBody.appendChild(row);
-            });
-            
-            // Aggiungi eventi ai pulsanti
-            document.querySelectorAll('.delete-scadenza').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    confirmDeleteScadenza(parseInt(this.dataset.id));
-                });
-            });
-        }
-        
-        // Funzione per calcolare i giorni alla scadenza
-        function getGiorniAllaScadenza(dataScadenza) {
-            const oggi = new Date();
-            const scadenza = new Date(dataScadenza);
-            const diffTime = scadenza - oggi;
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            return diffDays;
-        }
-        
-        // Funzione per formattare la data
-        function formatDate(dateString) {
-            const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-            return new Date(dateString).toLocaleDateString('it-IT', options);
-        }
-        
-        // Funzione per aggiornare le statistiche
-        function updateStats() {
-            // Prodotti totali
-            document.getElementById('stat-prodotti-totali').textContent = prodotti.length;
-            
-            // Prodotti in esaurimento
-            const prodottiEsaurimento = prodotti.filter(p => {
-                const stato = getStatoProdotto(p);
-                return stato.testo === 'Esaurimento';
-            }).length;
-            document.getElementById('stat-prodotti-esaurimento').textContent = prodottiEsaurimento;
-            
-            // Prodotti in scadenza
-            const oggi = new Date();
-            const prossimaSettimana = new Date();
-            prossimaSettimana.setDate(oggi.getDate() + 7);
-            
-            const prodottiScadenza = scadenze.filter(s => {
-                const dataScadenza = new Date(s.dataScadenza);
-                return dataScadenza <= prossimaSettimana;
-            }).length;
-            document.getElementById('stat-prodotti-scadenza').textContent = prodottiScadenza;
-            
-            // Spesa mensile
-            const oggiMese = new Date().getMonth();
-            const ordiniMese = ordini.filter(o => {
-                const dataOrdine = new Date(o.data);
-                return dataOrdine.getMonth() === oggiMese && o.stato !== 'annullato';
-            });
-            
-            const spesaMensile = ordiniMese.reduce((totale, ordine) => totale + ordine.totale, 0);
-            document.getElementById('stat-spesa-mensile').textContent = `€${spesaMensile.toFixed(2)}`;
-            
-            // Progress bar scorte
-            const prodottiInEsaurimento = prodotti.filter(p => {
-                const stato = getStatoProdotto(p);
-                return stato.testo === 'Esaurimento';
-            }).length;
-            
-            const percentualeEsaurimento = (prodottiInEsaurimento / prodotti.length) * 100;
-            document.getElementById('progress-scorte').style.width = `${percentualeEsaurimento}%`;
-        }
-        
-        // Funzione per inizializzare i grafici
-        function initCharts() {
-            // Grafico andamento scorte
-            const ctxScorte = document.getElementById('chart-scorte').getContext('2d');
-            window.chartScorte = new Chart(ctxScorte, {
-                type: 'line',
-                data: {
-                    labels: ['Gen', 'Feb', 'Mar', 'Apr', 'Mag', 'Giu', 'Lug', 'Ago', 'Set', 'Ott', 'Nov', 'Dic'],
-                    datasets: [{
-                        label: 'Livello medio scorte',
-                        data: [65, 59, 80, 81, 56, 55, 40, 45, 60, 70, 65, 50],
-                        borderColor: 'rgba(231, 76, 60, 1)',
-                        backgroundColor: 'rgba(231, 76, 60, 0.1)',
-                        borderWidth: 2,
-                        tension: 0.1,
-                        fill: true
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            max: 100
-                        }
-                    }
-                }
-            });
-            
-            // Grafico prodotti più utilizzati
-            const ctxProdotti = document.getElementById('chart-prodotti').getContext('2d');
-            window.chartProdotti = new Chart(ctxProdotti, {
-                type: 'bar',
-                data: {
-                    labels: ['Farina 00', 'Mozzarella', 'Pomodoro', 'Olio EVO', 'Prosciutto'],
-                    datasets: [{
-                        label: 'Utilizzo mensile',
-                        data: [120, 85, 65, 30, 25],
-                        backgroundColor: [
-                            'rgba(231, 76, 60, 0.7)',
-                            'rgba(243, 156, 18, 0.7)',
-                            'rgba(46, 204, 113, 0.7)',
-                            'rgba(52, 152, 219, 0.7)',
-                            'rgba(155, 89, 182, 0.7)'
-                        ],
-                        borderColor: [
-                            'rgba(231, 76, 60, 1)',
-                            'rgba(243, 156, 18, 1)',
-                            'rgba(46, 204, 113, 1)',
-                            'rgba(52, 152, 219, 1)',
-                            'rgba(155, 89, 182, 1)'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-            
-            // Grafico ultimi ordini
-            const ctxOrdini = document.getElementById('chart-ordini').getContext('2d');
-            window.chartOrdini = new Chart(ctxOrdini, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Farine', 'Condimenti', 'Formaggi', 'Salumi', 'Bevande', 'Altro'],
-                    datasets: [{
-                        label: 'Spesa per categoria',
-                        data: [350, 180, 420, 220, 150, 80],
-                        backgroundColor: [
-                            'rgba(231, 76, 60, 0.7)',
-                            'rgba(243, 156, 18, 0.7)',
-                            'rgba(46, 204, 113, 0.7)',
-                            'rgba(52, 152, 219, 0.7)',
-                            'rgba(155, 89, 182, 0.7)',
-                            'rgba(44, 62, 80, 0.7)'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'right',
-                        }
-                    }
-                }
-            });
-        }
-        
-        // Funzione per aggiornare i grafici
-        function updateCharts() {
-            // Qui dovresti aggiornare i dati dei grafici in base ai dati reali
-            // Per semplicità, lasciamo i dati di esempio
-        }
-        
-        // Funzione per mostrare il modale aggiungi/modifica prodotto
-        function showAddProdottoModal() {
-            const modal = document.getElementById('modal-prodotto');
-            const form = document.getElementById('form-prodotto');
-            
-            document.getElementById('modal-prodotto-titolo').innerHTML = '<i class="fas fa-box"></i> Aggiungi Prodotto';
-            form.reset();
-            document.getElementById('prodotto-id').value = '';
-            document.getElementById('alert-prodotto').style.display = 'none';
-            
-            modal.style.display = 'block';
-        }
-        
-        function showEditProdottoModal(id) {
-            const modal = document.getElementById('modal-prodotto');
-            const form = document.getElementById('form-prodotto');
-            const prodotto = prodotti.find(p => p.id === id);
-            
-            if(!prodotto) return;
-            
-            document.getElementById('modal-prodotto-titolo').innerHTML = '<i class="fas fa-edit"></i> Modifica Prodotto';
-            document.getElementById('prodotto-id').value = prodotto.id;
-            document.getElementById('prodotto-nome').value = prodotto.nome;
-            document.getElementById('prodotto-categoria').value = prodotto.categoria;
-            document.getElementById('prodotto-quantita').value = prodotto.quantita;
-            document.getElementById('prodotto-unita').value = prodotto.unita;
-            document.getElementById('prodotto-scorta-min').value = prodotto.scortaMin;
-            document.getElementById('prodotto-prezzo').value = prodotto.prezzo;
-            document.getElementById('prodotto-fornitore').value = prodotto.fornitore || '';
-            document.getElementById('prodotto-note').value = prodotto.note || '';
-            document.getElementById('alert-prodotto').style.display = 'none';
-            
-            modal.style.display = 'block';
-        }
-        
-        function hideModalProdotto() {
-            document.getElementById('modal-prodotto').style.display = 'none';
-        }
-        
-        // Funzione per salvare un prodotto
-        function saveProdotto(e) {
-            e.preventDefault();
-            
-            const id = document.getElementById('prodotto-id').value;
-            const nome = document.getElementById('prodotto-nome').value.trim();
-            const categoria = document.getElementById('prodotto-categoria').value;
-            const quantita = parseFloat(document.getElementById('prodotto-quantita').value);
-            const unita = document.getElementById('prodotto-unita').value;
-            const scortaMin = parseFloat(document.getElementById('prodotto-scorta-min').value);
-            const prezzo = parseFloat(document.getElementById('prodotto-prezzo').value);
-            const fornitore = document.getElementById('prodotto-fornitore').value.trim();
-            const note = document.getElementById('prodotto-note').value.trim();
-            
-            // Validazione
-            if(!nome || !categoria || isNaN(quantita) || !unita || isNaN(scortaMin) || isNaN(prezzo)) {
-                showAlert('alert-prodotto', 'Per favore compila tutti i campi obbligatori', 'danger');
+            if (!tableNumber || !peopleCount) {
+                alert('Inserisci numero tavolo e numero persone');
                 return;
             }
             
-            if(id) {
-                // Modifica prodotto esistente
-                const index = prodotti.findIndex(p => p.id === parseInt(id));
-                if(index !== -1) {
-                    prodotti[index] = {
-                        ...prodotti[index],
-                        nome,
-                        categoria,
-                        quantita,
-                        unita,
-                        scortaMin,
-                        prezzo,
-                        fornitore,
-                        note
-                    };
-                    
-                    showAlert('alert-prodotto', 'Prodotto modificato con successo!', 'success');
-                }
-            } else {
-                // Aggiungi nuovo prodotto
-                const newId = prodotti.length > 0 ? Math.max(...prodotti.map(p => p.id)) + 1 : 1;
-                prodotti.push({
-                    id: newId,
-                    nome,
-                    categoria,
-                    quantita,
-                    unita,
-                    scortaMin,
-                    prezzo,
-                    fornitore,
-                    note
-                });
-                
-                showAlert('alert-prodotto', 'Prodotto aggiunto con successo!', 'success');
-            }
+            currentOrder.table = tableNumber;
+            currentOrder.people = parseInt(peopleCount);
             
-            saveData();
-            updateUI();
-            
-            // Resetta il form dopo 1 secondo
-            setTimeout(() => {
-                document.getElementById('form-prodotto').reset();
-                hideModalProdotto();
-            }, 1000);
-        }
-        
-        // Funzione per confermare l'eliminazione di un prodotto
-        function confirmDeleteProdotto(id) {
-            const prodotto = prodotti.find(p => p.id === id);
-            if(!prodotto) return;
-            
-            showModalConfirm(
-                `Sei sicuro di voler eliminare il prodotto "${prodotto.nome}"?`,
-                function() {
-                    deleteProdotto(id);
-                    hideModalConfirm();
-                }
-            );
-        }
-        
-        // Funzione per eliminare un prodotto
-        function deleteProdotto(id) {
-            prodotti = prodotti.filter(p => p.id !== id);
-            saveData();
-            updateUI();
-        }
-        
-        // Funzione per mostrare il modale nuovo/modifica ordine
-        function showAddOrdineModal() {
-            const modal = document.getElementById('modal-ordine');
-            const form = document.getElementById('form-ordine');
-            
-            form.reset();
-            document.getElementById('ordine-totale').value = '0.00';
-            document.getElementById('alert-ordine').style.display = 'none';
-            
-            // Pulisci i prodotti dell'ordine (mantenendo il primo)
-            const container = document.getElementById('ordine-prodotti-container');
-            while(container.children.length > 1) {
-                container.removeChild(container.lastChild);
-            }
-            
-            // Resetta il primo prodotto
-            const firstProdotto = container.querySelector('.ordine-prodotto');
-            firstProdotto.querySelector('.ordine-prodotto-nome').value = '';
-            firstProdotto.querySelector('.ordine-prodotto-quantita').value = '';
-            
-            // Popola i select dei prodotti
-            populateProdottoSelects();
-            
-            // Imposta la data odierna come default
-            document.getElementById('ordine-data').valueAsDate = new Date();
-            
-            modal.style.display = 'block';
-        }
-        
-        function showEditOrdineModal(id) {
-            const modal = document.getElementById('modal-ordine');
-            const form = document.getElementById('form-ordine');
-            const ordine = ordini.find(o => o.id === id);
-            
-            if(!ordine) return;
-            
-            form.reset();
-            document.getElementById('alert-ordine').style.display = 'none';
-            
-            // Pulisci i prodotti dell'ordine
-            const container = document.getElementById('ordine-prodotti-container');
-            while(container.firstChild) {
-                container.removeChild(container.firstChild);
-            }
-            
-            // Aggiungi i prodotti dell'ordine
-            ordine.prodotti.forEach((prodotto, index) => {
-                const prodottoDiv = document.createElement('div');
-                prodottoDiv.className = 'ordine-prodotto';
-                prodottoDiv.innerHTML = `
-                    <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-                        <select class="ordine-prodotto-nome" style="flex: 3;" required>
-                            <option value="">Seleziona prodotto</option>
-                        </select>
-                        <input type="number" class="ordine-prodotto-quantita" step="0.01" placeholder="Q.tà" style="flex: 1;" required value="${prodotto.quantita}">
-                        <button type="button" class="btn btn-danger rimuovi-prodotto"><i class="fas fa-minus"></i></button>
-                    </div>
-                `;
-                
-                container.appendChild(prodottoDiv);
-                
-                // Popola il select del prodotto
-                const select = prodottoDiv.querySelector('.ordine-prodotto-nome');
-                populateProdottoSelect(select);
-                
-                // Imposta il prodotto selezionato
-                setTimeout(() => {
-                    select.value = prodotto.prodottoId;
-                    updateOrdineTotal();
-                }, 0);
-            });
-            
-            // Popola i campi dell'ordine
-            document.getElementById('ordine-fornitore').value = ordine.fornitore;
-            document.getElementById('ordine-data').value = ordine.data;
-            document.getElementById('ordine-note').value = ordine.note || '';
-            document.getElementById('ordine-totale').value = ordine.totale.toFixed(2);
-            
-            // Aggiungi eventi ai pulsanti rimuovi prodotto
-            document.querySelectorAll('.rimuovi-prodotto').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    if(container.children.length > 1) {
-                        container.removeChild(this.closest('.ordine-prodotto'));
-                        updateOrdineTotal();
-                    }
-                });
-            });
-            
-            modal.style.display = 'block';
-        }
-        
-        function hideModalOrdine() {
-            document.getElementById('modal-ordine').style.display = 'none';
-        }
-        
-        // Funzione per popolare i select dei prodotti
-        function populateProdottoSelects() {
-            document.querySelectorAll('.ordine-prodotto-nome').forEach(select => {
-                populateProdottoSelect(select);
-            });
-        }
-        
-        function populateProdottoSelect(select) {
-            // Salva il valore selezionato
-            const selectedValue = select.value;
-            
-            // Pulisci le opzioni tranne la prima
-            while(select.options.length > 1) {
-                select.remove(1);
-            }
-            
-            // Aggiungi i prodotti
-            prodotti.forEach(prodotto => {
-                const option = document.createElement('option');
-                option.value = prodotto.id;
-                option.textContent = `${prodotto.nome} (${prodotto.categoria})`;
-                select.appendChild(option);
-            });
-            
-            // Ripristina il valore selezionato se esiste
-            if(selectedValue && [...select.options].some(opt => opt.value === selectedValue)) {
-                select.value = selectedValue;
-            }
-        }
-        
-        // Funzione per aggiungere un prodotto all'ordine
-        function addProdottoToOrdine() {
-            const container = document.getElementById('ordine-prodotti-container');
-            
-            const prodottoDiv = document.createElement('div');
-            prodottoDiv.className = 'ordine-prodotto';
-            prodottoDiv.innerHTML = `
-                <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-                    <select class="ordine-prodotto-nome" style="flex: 3;" required>
-                        <option value="">Seleziona prodotto</option>
-                    </select>
-                    <input type="number" class="ordine-prodotto-quantita" step="0.01" placeholder="Q.tà" style="flex: 1;" required>
-                    <button type="button" class="btn btn-danger rimuovi-prodotto"><i class="fas fa-minus"></i></button>
-                </div>
+            // Aggiorna info tavolo nella schermata menu
+            document.getElementById('table-info').innerHTML = `
+                <p><strong>Tavolo:</strong> ${currentOrder.table}</p>
+                <p><strong>Persone:</strong> ${currentOrder.people}</p>
             `;
             
-            container.appendChild(prodottoDiv);
-            
-            // Popola il select del prodotto
-            const select = prodottoDiv.querySelector('.ordine-prodotto-nome');
-            populateProdottoSelect(select);
-            
-            // Aggiungi evento al pulsante rimuovi
-            prodottoDiv.querySelector('.rimuovi-prodotto').addEventListener('click', function() {
-                if(container.children.length > 1) {
-                    container.removeChild(prodottoDiv);
-                    updateOrdineTotal();
-                }
-            });
-            
-            // Aggiungi eventi per aggiornare il totale
-            select.addEventListener('change', updateOrdineTotal);
-            prodottoDiv.querySelector('.ordine-prodotto-quantita').addEventListener('input', updateOrdineTotal);
+            showScreen(3);
         }
         
-        // Funzione per aggiornare il totale dell'ordine
-        function updateOrdineTotal() {
-            let totale = 0;
+        function goToSummaryScreen() {
+            // Aggiorna il riepilogo ordine
+            let summary = `
+                <h3>Tavolo ${currentOrder.table} (${currentOrder.people} persone)</h3>
+                <h4>Bevande:</h4>
+                <ul>
+                    ${currentOrder.drinks.waterStill ? `<li>Acqua Naturale: ${currentOrder.drinks.waterStill}</li>` : ''}
+                    ${currentOrder.drinks.waterSparkling ? `<li>Acqua Frizzante: ${currentOrder.drinks.waterSparkling}</li>` : ''}
+                    ${currentOrder.drinks.cokeNormal ? `<li>Coca Cola Normale: ${currentOrder.drinks.cokeNormal}</li>` : ''}
+                    ${currentOrder.drinks.cokeZero ? `<li>Coca Cola Zero: ${currentOrder.drinks.cokeZero}</li>` : ''}
+                    ${currentOrder.drinks.beerTap ? `<li>Birra alla Spina: ${currentOrder.drinks.beerTap}</li>` : ''}
+                    ${currentOrder.drinks.beerBottle ? `<li>Birra in Bottiglia: ${currentOrder.drinks.beerBottle}</li>` : ''}
+                    ${currentOrder.drinks.wineWhiteStill ? `<li>Vino Bianco Fermo: ${currentOrder.drinks.wineWhiteStill}</li>` : ''}
+                    ${currentOrder.drinks.wineWhiteSparkling ? `<li>Vino Bianco Frizzante: ${currentOrder.drinks.wineWhiteSparkling}</li>` : ''}
+                </ul>
+                <h4>Menu:</h4>
+                <ul>
+                    ${currentOrder.menus.complete ? `<li>Menu Completo: ${currentOrder.menus.complete}</li>` : ''}
+                    ${currentOrder.menus.pizzaOnly ? `<li>Menu Solo Pizza: ${currentOrder.menus.pizzaOnly}</li>` : ''}
+                </ul>
+            `;
             
-            document.querySelectorAll('.ordine-prodotto').forEach(prodottoDiv => {
-                const prodottoId = prodottoDiv.querySelector('.ordine-prodotto-nome').value;
-                const quantita = parseFloat(prodottoDiv.querySelector('.ordine-prodotto-quantita').value) || 0;
-                
-                if(prodottoId) {
-                    const prodotto = prodotti.find(p => p.id === parseInt(prodottoId));
-                    if(prodotto) {
-                        totale += quantita * prodotto.prezzo;
-                    }
-                }
-            });
-            
-            document.getElementById('ordine-totale').value = totale.toFixed(2);
-        }
-        
-// Funzione per salvare un ordine
-function saveOrdine(e) {
-    e.preventDefault();
-    
-    const fornitore = document.getElementById('ordine-fornitore').value.trim();
-    const data = document.getElementById('ordine-data').value;
-    const note = document.getElementById('ordine-note').value.trim();
-    
-    // Validazione
-    if(!fornitore || !data) {
-        showAlert('alert-ordine', 'Per favore compila tutti i campi obbligatori', 'danger');
-        return;
-    }
-    
-    // Raccogli i prodotti dell'ordine
-    const ordineProdotti = [];
-    let hasErrors = false;
-    
-    document.querySelectorAll('.ordine-prodotto').forEach(prodottoDiv => {
-        const prodottoId = prodottoDiv.querySelector('.ordine-prodotto-nome').value;
-        const quantita = parseFloat(prodottoDiv.querySelector('.ordine-prodotto-quantita').value);
-        
-        if(!prodottoId || isNaN(quantita)) {  // <-- Qui c'era l'errore (parentesi extra)
-            hasErrors = true;
-            return;
-        }
-        
-        const prodotto = prodotti.find(p => p.id === parseInt(prodottoId));
-        if(prodotto) {
-            ordineProdotti.push({
-                prodottoId: prodotto.id,
-                quantita,
-                prezzo: prodotto.prezzo
-            });
-        }
-    });
-    
-    if(hasErrors || ordineProdotti.length === 0) {
-        showAlert('alert-ordine', 'Per favore compila tutti i prodotti correttamente', 'danger');
-        return;
-    }
-    
-    // Calcola il totale
-    const totale = ordineProdotti.reduce((sum, p) => sum + (p.quantita * p.prezzo), 0);
-    
-    // Aggiungi o modifica l'ordine
-    const idInput = document.getElementById('ordine-id');
-    if(idInput && idInput.value) {
-        // Modifica ordine esistente
-        const index = ordini.findIndex(o => o.id === parseInt(idInput.value));
-        if(index !== -1) {
-            ordini[index] = {
-                ...ordini[index],
-                fornitore,
-                data,
-                prodotti: ordineProdotti,
-                totale,
-                note
-            };
-            
-            showAlert('alert-ordine', 'Ordine modificato con successo!', 'success');
-        }
-    } else {
-        // Aggiungi nuovo ordine
-        const newId = ordini.length > 0 ? Math.max(...ordini.map(o => o.id)) + 1 : 1;
-        ordini.push({
-            id: newId,
-            fornitore,
-            data,
-            prodotti: ordineProdotti,
-            totale,
-            stato: 'in attesa',
-            note
-        });
-        
-        showAlert('alert-ordine', 'Ordine creato con successo!', 'success');
-    }
-    
-    saveData();
-    updateUI();
-    
-    // Resetta il form dopo 1 secondo
-    setTimeout(() => {
-        document.getElementById('form-ordine').reset();
-        hideModalOrdine();
-    }, 1000);
-}
-        
-        // Funzione per mostrare il modale dettaglio ordine
-        function showDettaglioOrdineModal(id) {
-            const modal = document.getElementById('modal-dettaglio-ordine');
-            const ordine = ordini.find(o => o.id === id);
-            
-            if(!ordine) return;
-            
-            // Popola le informazioni dell'ordine
-            document.getElementById('dettaglio-ordine-fornitore').textContent = ordine.fornitore;
-            document.getElementById('dettaglio-ordine-data').textContent = formatDate(ordine.data);
-            
-            const stato = ordine.stato === 'ricevuto' 
-                ? '<span class="badge badge-success">Ricevuto</span>' 
-                : ordine.stato === 'in attesa' 
-                    ? '<span class="badge badge-warning">In attesa</span>' 
-                    : '<span class="badge badge-danger">Annullato</span>';
-            document.getElementById('dettaglio-ordine-stato').innerHTML = stato;
-            
-            document.getElementById('dettaglio-ordine-note').textContent = ordine.note || 'Nessuna nota';
-            
-            // Popola i prodotti
-            const tableBody = document.querySelector('#dettaglio-ordine-prodotti tbody');
-            tableBody.innerHTML = '';
-            
-            ordine.prodotti.forEach(item => {
-                const prodotto = prodotti.find(p => p.id === item.prodottoId);
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${prodotto ? prodotto.nome : 'Prodotto non trovato'}</td>
-                    <td>${item.quantita} ${prodotto ? prodotto.unita : ''}</td>
-                    <td>€${item.prezzo.toFixed(2)}</td>
-                    <td>€${(item.quantita * item.prezzo).toFixed(2)}</td>
-                `;
-                tableBody.appendChild(row);
-            });
-            
-            // Imposta il totale
-            document.getElementById('dettaglio-ordine-totale').textContent = ordine.totale.toFixed(2);
-            
-            // Mostra/nascondi pulsanti in base allo stato
-            const btnRicevuto = document.getElementById('btn-ordine-ricevuto');
-            const btnAnnulla = document.getElementById('btn-ordine-annulla');
-            
-            if(ordine.stato === 'in attesa') {
-                btnRicevuto.style.display = 'inline-block';
-                btnAnnulla.style.display = 'inline-block';
-                
-                btnRicevuto.onclick = function() {
-                    markOrdineAsRicevuto(id);
-                    hideModalOrdine();
-                };
-                
-                btnAnnulla.onclick = function() {
-                    annullaOrdine(id);
-                    hideModalOrdine();
-                };
-            } else {
-                btnRicevuto.style.display = 'none';
-                btnAnnulla.style.display = 'none';
+            if (currentOrder.pizzas.length > 0) {
+                summary += `<h4>Pizze Singole:</h4><ul>`;
+                currentOrder.pizzas.forEach(pizza => {
+                    summary += `<li>${pizza.quantity}x ${getPizzaName(pizza.type)}</li>`;
+                });
+                summary += `</ul>`;
             }
             
-            // Pulsante stampa
-            document.getElementById('btn-print-ordine').onclick = function() {
-                printOrdine(id);
-            };
-            
-            modal.style.display = 'block';
+            document.getElementById('order-summary').innerHTML = summary;
+            showScreen(4);
         }
         
-        function hideModalOrdine() {
-            document.getElementById('modal-dettaglio-ordine').style.display = 'none';
+        // Funzioni per gestire le quantità
+        function changeQuantity(item, delta) {
+            const element = document.getElementById(item);
+            let quantity = parseInt(element.textContent) + delta;
+            if (quantity < 0) quantity = 0;
+            element.textContent = quantity;
+            
+            // Aggiorna l'ordine corrente
+            switch(item) {
+                case 'water-still':
+                    currentOrder.drinks.waterStill = quantity;
+                    break;
+                case 'water-sparkling':
+                    currentOrder.drinks.waterSparkling = quantity;
+                    break;
+                case 'coke-normal':
+                    currentOrder.drinks.cokeNormal = quantity;
+                    break;
+                case 'coke-zero':
+                    currentOrder.drinks.cokeZero = quantity;
+                    break;
+                case 'beer-tap':
+                    currentOrder.drinks.beerTap = quantity;
+                    break;
+                case 'beer-bottle':
+                    currentOrder.drinks.beerBottle = quantity;
+                    break;
+                case 'wine-white-still':
+                    currentOrder.drinks.wineWhiteStill = quantity;
+                    break;
+                case 'wine-white-sparkling':
+                    currentOrder.drinks.wineWhiteSparkling = quantity;
+                    break;
+                case 'menu-complete':
+                    currentOrder.menus.complete = quantity;
+                    break;
+                case 'menu-pizza-only':
+                    currentOrder.menus.pizzaOnly = quantity;
+                    break;
+                case 'single-pizza':
+                    // Gestito separatamente
+                    break;
+            }
         }
         
-        // Funzione per confermare l'eliminazione di un ordine
-        function confirmDeleteOrdine(id) {
-            const ordine = ordini.find(o => o.id === id);
-            if(!ordine) return;
+        // Funzioni per gestire le pizze singole
+        function addSinglePizza() {
+            const pizzaType = document.getElementById('pizza-type').value;
+            const quantity = parseInt(document.getElementById('single-pizza').textContent);
             
-            showModalConfirm(
-                `Sei sicuro di voler eliminare l'ordine #${ordine.id} del ${formatDate(ordine.data)}?`,
-                function() {
-                    deleteOrdine(id);
-                    hideModalConfirm();
-                }
-            );
-        }
-        
-        // Funzione per eliminare un ordine
-        function deleteOrdine(id) {
-            ordini = ordini.filter(o => o.id !== id);
-            saveData();
-            updateUI();
-        }
-        
-        // Funzione per segnare un ordine come ricevuto
-        function markOrdineAsRicevuto(id) {
-            const ordine = ordini.find(o => o.id === id);
-            if(!ordine) return;
-            
-            ordine.stato = 'ricevuto';
-            
-            // Aggiorna le quantità dei prodotti
-            ordine.prodotti.forEach(item => {
-                const prodotto = prodotti.find(p => p.id === item.prodottoId);
-                if(prodotto) {
-                    prodotto.quantita += item.quantita;
-                }
-            });
-            
-            saveData();
-            updateUI();
-        }
-        
-        // Funzione per annullare un ordine
-        function annullaOrdine(id) {
-            const ordine = ordini.find(o => o.id === id);
-            if(!ordine) return;
-            
-            ordine.stato = 'annullato';
-            saveData();
-            updateUI();
-        }
-        
-        // Funzione per mostrare il modale aggiungi scadenza
-        function showAddScadenzaModal() {
-            const modal = document.getElementById('modal-scadenza');
-            const form = document.getElementById('form-scadenza');
-            
-            form.reset();
-            document.getElementById('alert-scadenza').style.display = 'none';
-            
-            // Popola il select dei prodotti
-            const select = document.getElementById('scadenza-prodotto');
-            select.innerHTML = '<option value="">Seleziona prodotto</option>';
-            
-            prodotti.forEach(prodotto => {
-                const option = document.createElement('option');
-                option.value = prodotto.id;
-                option.textContent = `${prodotto.nome} (${prodotto.categoria})`;
-                select.appendChild(option);
-            });
-            
-            // Imposta la data di default a 30 giorni da oggi
-            const oggi = new Date();
-            const prossimoMese = new Date();
-            prossimoMese.setDate(oggi.getDate() + 30);
-            document.getElementById('scadenza-data').valueAsDate = prossimoMese;
-            
-            modal.style.display = 'block';
-        }
-        
-        function hideModalScadenza() {
-            document.getElementById('modal-scadenza').style.display = 'none';
-        }
-        
-        // Funzione per salvare una scadenza
-        function saveScadenza(e) {
-            e.preventDefault();
-            
-            const prodottoId = document.getElementById('scadenza-prodotto').value;
-            const lotto = document.getElementById('scadenza-lotto').value.trim();
-            const quantita = parseFloat(document.getElementById('scadenza-quantita').value);
-            const dataScadenza = document.getElementById('scadenza-data').value;
-            const note = document.getElementById('scadenza-note').value.trim();
-            
-            // Validazione
-            if(!prodottoId || !lotto || isNaN(quantita) || !dataScadenza) {
-                showAlert('alert-scadenza', 'Per favore compila tutti i campi obbligatori', 'danger');
+            if (quantity <= 0) {
+                alert('Inserisci una quantità valida');
                 return;
             }
             
-            // Aggiungi nuova scadenza
-            const newId = scadenze.length > 0 ? Math.max(...scadenze.map(s => s.id)) + 1 : 1;
-            scadenze.push({
-                id: newId,
-                prodottoId: parseInt(prodottoId),
-                lotto,
-                quantita,
-                dataScadenza,
-                note
+            // Aggiungi all'array delle pizze
+            currentOrder.pizzas.push({
+                type: pizzaType,
+                quantity: quantity
             });
             
-            showAlert('alert-scadenza', 'Scadenza aggiunta con successo!', 'success');
-            saveData();
-            updateUI();
+            // Aggiorna la lista visuale
+            updatePizzaList();
             
-            // Resetta il form dopo 1 secondo
-            setTimeout(() => {
-                document.getElementById('form-scadenza').reset();
-                hideModalScadenza();
-            }, 1000);
+            // Resetta il contatore
+            document.getElementById('single-pizza').textContent = '0';
         }
         
-        // Funzione per confermare l'eliminazione di una scadenza
-        function confirmDeleteScadenza(id) {
-            const scadenza = scadenze.find(s => s.id === id);
-            if(!scadenza) return;
+        function updatePizzaList() {
+            const pizzasContainer = document.getElementById('pizzas-added');
+            pizzasContainer.innerHTML = '';
             
-            const prodotto = prodotti.find(p => p.id === scadenza.prodottoId);
-            const prodottoNome = prodotto ? prodotto.nome : 'Prodotto sconosciuto';
+            if (currentOrder.pizzas.length === 0) {
+                pizzasContainer.innerHTML = '<p>Nessuna pizza aggiunta</p>';
+                return;
+            }
             
-            showModalConfirm(
-                `Sei sicuro di voler eliminare la scadenza per "${prodottoNome}" (lotto: ${scadenza.lotto})?`,
-                function() {
-                    deleteScadenza(id);
-                    hideModalConfirm();
+            currentOrder.pizzas.forEach((pizza, index) => {
+                const pizzaElement = document.createElement('div');
+                pizzaElement.className = 'pizza-item';
+                pizzaElement.innerHTML = `
+                    <span>${pizza.quantity}x ${getPizzaName(pizza.type)}</span>
+                    <button onclick="removePizza(${index})">Rimuovi</button>
+                `;
+                pizzasContainer.appendChild(pizzaElement);
+            });
+        }
+        
+        function removePizza(index) {
+            currentOrder.pizzas.splice(index, 1);
+            updatePizzaList();
+        }
+        
+        function getPizzaName(type) {
+            const names = {
+                'margherita': 'Margherita',
+                'diavola': 'Diavola',
+                'quattro-formaggi': 'Quattro Formaggi',
+                'capricciosa': 'Capricciosa',
+                'vegetariana': 'Vegetariana'
+            };
+            return names[type] || type;
+        }
+        
+        // Funzioni per salvare e gestire gli ordini
+        function saveOrder() {
+            // Aggiungi timestamp
+            currentOrder.timestamp = new Date().toLocaleString();
+            
+            // Aggiungi all'array degli ordini
+            allOrders.push({...currentOrder});
+            
+            // Salva nel localStorage
+            localStorage.setItem('pizzeriaOrders', JSON.stringify(allOrders));
+            
+            alert(`Ordine per il Tavolo ${currentOrder.table} salvato con successo!`);
+            resetCurrentOrder();
+            showOrdersList();
+            showScreen(5);
+        }
+        
+        function addAnotherTable() {
+            // Salva l'ordine corrente
+            allOrders.push({...currentOrder});
+            localStorage.setItem('pizzeriaOrders', JSON.stringify(allOrders));
+            
+            // Resetta per un nuovo tavolo (mantenendo l'operatore)
+            const operator = currentOrder.operator;
+            resetCurrentOrder();
+            currentOrder.operator = operator;
+            
+            showScreen(2);
+        }
+        
+        function resetCurrentOrder() {
+            currentOrder = {
+                operator: currentOrder.operator,
+                table: '',
+                people: 0,
+                drinks: {
+                    waterStill: 0,
+                    waterSparkling: 0,
+                    cokeNormal: 0,
+                    cokeZero: 0,
+                    beerTap: 0,
+                    beerBottle: 0,
+                    wineWhiteStill: 0,
+                    wineWhiteSparkling: 0
+                },
+                menus: {
+                    complete: 0,
+                    pizzaOnly: 0
+                },
+                pizzas: []
+            };
+            
+            // Resetta tutti i contatori visuali
+            document.querySelectorAll('.quantity').forEach(el => {
+                el.textContent = '0';
+            });
+            document.getElementById('pizzas-added').innerHTML = '';
+        }
+        
+        // Funzioni per visualizzare gli ordini salvati
+        function showOrdersList() {
+            // Carica gli ordini dal localStorage
+            const savedOrders = localStorage.getItem('pizzeriaOrders');
+            if (savedOrders) {
+                allOrders = JSON.parse(savedOrders);
+            }
+            
+            const ordersContainer = document.getElementById('orders-list');
+            ordersContainer.innerHTML = '';
+            
+            if (allOrders.length === 0) {
+                ordersContainer.innerHTML = '<p>Nessun ordine registrato</p>';
+                return;
+            }
+            
+            allOrders.forEach((order, index) => {
+                const orderElement = document.createElement('div');
+                orderElement.className = 'table-item';
+                
+                let orderDetails = `
+                    <h3>Tavolo ${order.table} (${order.people} persone)</h3>
+                    <p><strong>Operatore:</strong> ${order.operator}</p>
+                    <p><strong>Ora:</strong> ${order.timestamp}</p>
+                    <button onclick="viewOrderDetails(${index})">Dettagli</button>
+                    <button onclick="deleteOrder(${index})">Elimina</button>
+                `;
+                
+                orderElement.innerHTML = orderDetails;
+                ordersContainer.appendChild(orderElement);
+            });
+        }
+        
+        function viewOrderDetails(index) {
+            const order = allOrders[index];
+            let details = `
+                <h3>Dettagli Ordine - Tavolo ${order.table}</h3>
+                <p><strong>Operatore:</strong> ${order.operator}</p>
+                <p><strong>Persone:</strong> ${order.people}</p>
+                <p><strong>Ora:</strong> ${order.timestamp}</p>
+                
+                <h4>Bevande:</h4>
+                <ul>
+            `;
+            
+            // Aggiungi bevande
+            for (const [key, value] of Object.entries(order.drinks)) {
+                if (value > 0) {
+                    const drinkName = getDrinkName(key);
+                    details += `<li>${drinkName}: ${value}</li>`;
                 }
-            );
+            }
+            
+            details += `</ul><h4>Menu:</h4><ul>`;
+            
+            // Aggiungi menu
+            if (order.menus.complete > 0) {
+                details += `<li>Menu Completo: ${order.menus.complete}</li>`;
+            }
+            if (order.menus.pizzaOnly > 0) {
+                details += `<li>Menu Solo Pizza: ${order.menus.pizzaOnly}</li>`;
+            }
+            
+            details += `</ul>`;
+            
+            // Aggiungi pizze singole
+            if (order.pizzas.length > 0) {
+                details += `<h4>Pizze Singole:</h4><ul>`;
+                order.pizzas.forEach(pizza => {
+                    details += `<li>${pizza.quantity}x ${getPizzaName(pizza.type)}</li>`;
+                });
+                details += `</ul>`;
+            }
+            
+            alert(details);
         }
         
-        // Funzione per eliminare una scadenza
-        function deleteScadenza(id) {
-            scadenze = scadenze.filter(s => s.id !== id);
-            saveData();
-            updateUI();
+        function getDrinkName(key) {
+            const names = {
+                'waterStill': 'Acqua Naturale',
+                'waterSparkling': 'Acqua Frizzante',
+                'cokeNormal': 'Coca Cola Normale',
+                'cokeZero': 'Coca Cola Zero',
+                'beerTap': 'Birra alla Spina',
+                'beerBottle': 'Birra in Bottiglia',
+                'wineWhiteStill': 'Vino Bianco Fermo',
+                'wineWhiteSparkling': 'Vino Bianco Frizzante'
+            };
+            return names[key] || key;
         }
         
-        // Funzione per mostrare il modale di conferma
-        function showModalConfirm(message, confirmCallback) {
-            document.getElementById('confirm-message').textContent = message;
-            document.getElementById('btn-confirm-yes').onclick = confirmCallback;
-            document.getElementById('modal-confirm').style.display = 'block';
-        }
-        
-        function hideModalConfirm() {
-            document.getElementById('modal-confirm').style.display = 'none';
-        }
-        
-        // Funzione per mostrare un alert
-        function showAlert(elementId, message, type) {
-            const alert = document.getElementById(elementId);
-            alert.innerHTML = `<i class="fas fa-${getAlertIcon(type)}"></i> ${message}`;
-            alert.className = `alert alert-${type}`;
-            alert.style.display = 'flex';
-        }
-        
-        function getAlertIcon(type) {
-            switch(type) {
-                case 'success': return 'check-circle';
-                case 'danger': return 'times-circle';
-                case 'warning': return 'exclamation-triangle';
-                case 'info': return 'info-circle';
-                default: return 'info-circle';
+        function deleteOrder(index) {
+            if (confirm('Sei sicuro di voler eliminare questo ordine?')) {
+                allOrders.splice(index, 1);
+                localStorage.setItem('pizzeriaOrders', JSON.stringify(allOrders));
+                showOrdersList();
             }
         }
         
-        // Funzione per filtrare l'inventario
-        function filterInventario() {
-            const searchTerm = document.getElementById('search-inventario').value.toLowerCase();
-            const rows = document.querySelectorAll('#table-inventario tbody tr');
+        // Inizializzazione
+        document.addEventListener('DOMContentLoaded', () => {
+            // Mostra la prima schermata
+            showScreen(1);
             
-            rows.forEach(row => {
-                const nome = row.cells[0].textContent.toLowerCase();
-                const categoria = row.cells[1].textContent.toLowerCase();
-                
-                if(nome.includes(searchTerm) || categoria.includes(searchTerm)) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-        }
-        
-        function resetSearchInventario() {
-            document.getElementById('search-inventario').value = '';
-            filterInventario();
-        }
-        
-        // Funzione per filtrare gli ordini
-        function filterOrdini() {
-            const searchTerm = document.getElementById('search-ordini').value.toLowerCase();
-            const rows = document.querySelectorAll('#table-ordini tbody tr');
-            
-            rows.forEach(row => {
-                const fornitore = row.cells[1].textContent.toLowerCase();
-                const stato = row.cells[5].textContent.toLowerCase();
-                
-                if(fornitore.includes(searchTerm) || stato.includes(searchTerm)) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-        }
-        
-        function resetSearchOrdini() {
-            document.getElementById('search-ordini').value = '';
-            filterOrdini();
-        }
-        
-        // Funzione per filtrare le scadenze
-        function filterScadenze() {
-            const searchTerm = document.getElementById('search-scadenze').value.toLowerCase();
-            const rows = document.querySelectorAll('#table-scadenze tbody tr');
-            
-            rows.forEach(row => {
-                const prodotto = row.cells[0].textContent.toLowerCase();
-                
-                if(prodotto.includes(searchTerm)) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-        }
-        
-        function resetSearchScadenze() {
-            document.getElementById('search-scadenze').value = '';
-            filterScadenze();
-        }
-        
-        // Funzione per eseguire il backup dei dati
-        function backupData() {
-            const data = {
-                prodotti,
-                ordini,
-                scadenze,
-                lastBackupTime: new Date().toISOString()
-            };
-            
-            const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `backup_magazzino_pizzeria_${new Date().toISOString().slice(0, 10)}.json`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            
-            // Aggiorna l'ora dell'ultimo backup
-            lastBackupTime = new Date().toISOString();
-            document.getElementById('last-backup-time').textContent = new Date(lastBackupTime).toLocaleString();
-            saveData();
-            
-            showAlert('alert-prodotto', 'Backup eseguito con successo!', 'success');
-        }
-        
-        // Funzione per esportare i dati
-        function exportData() {
-            // Qui potresti implementare l'esportazione in diversi formati (CSV, Excel, ecc.)
-            // Per semplicità, esportiamo come JSON (simile al backup)
-            backupData();
-        }
-        
-        // Funzione per confermare il reset dei dati
-        function confirmResetData() {
-            showModalConfirm(
-                'Sei sicuro di voler resettare tutti i dati? Questa azione non può essere annullata.',
-                function() {
-                    localStorage.removeItem('magazzinoPizzeria');
-                    window.location.reload();
-                }
-            );
-        }
-        
-        // Funzioni per la stampa
-        function printInventario() {
-            window.print();
-        }
-        
-        function printOrdini() {
-            window.print();
-        }
-        
-        function printScadenze() {
-            window.print();
-        }
-        
-        function printStats() {
-            window.print();
-        }
-        
-        function printOrdine(id) {
-            // Qui potresti implementare la stampa di un singolo ordine
-            // Per semplicità, usiamo la stampa generica
-            window.print();
-        }
+            // Carica ordini esistenti
+            const savedOrders = localStorage.getItem('pizzeriaOrders');
+            if (savedOrders) {
+                allOrders = JSON.parse(savedOrders);
+            }
+        });
     </script>
 </body>
 </html>
